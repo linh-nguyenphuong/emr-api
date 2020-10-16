@@ -93,3 +93,8 @@ class ErrorTemplate:
             success=False,
             message='Định dạng hình ảnh không được cho phép.'
         )
+
+        ROLE_EXIST = dict(
+            success=False,
+            message='Role này đã tồn tại.'
+        )

@@ -7,7 +7,8 @@ from rest_framework import serializers
 from templates.error_template import ErrorTemplate
 
 # Model imports
-from flower_category.models import FlowerCategory
+from role.models import Role
+
 
 class RoleSerializer(serializers.ModelSerializer):
     class Meta:

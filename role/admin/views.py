@@ -1,5 +1,8 @@
 # Django imports
 from django.utils import timezone
+from django_filters.rest_framework import (
+    DjangoFilterBackend,
+)
 
 # Django REST framework imports
 from rest_framework import generics
@@ -12,7 +15,7 @@ from rest_framework.exceptions import (
     ValidationError,
     AuthenticationFailed
 )
-from rest_framework.pagination import PageNumberPagination
+from rest_framework.filters import OrderingFilter, SearchFilter
 
 # Application imports
 from templates.error_template import (
@@ -23,21 +26,22 @@ from api.permissions import (
 )
 
 # Model imports
-from flower_category.models import (
-    FlowerCategory
+from role.models import (
+    Role
 )
 
-# Serialier imports
-from flower_category.admin.serializers import (
-    FlowerCategorySerializer,
+# Serializer imports
+from .serializers import (
+    RoleSerializer
 )
+
 
 # List - Create Flower Category
-class FlowerCategoryView(generics.ListCreateAPIView):
-    model = FlowerCategory
-    serializer_class = FlowerCategorySerializer
-    permission_classes = (IsAdmin,)
-    pagination_class = None
+class ListCreateRoleView(generics.ListCreateAPIView):
+    model = Role
+    serializer_class = RoleSerializer
+    permission_classes = ()
+    filter_backends = (DjangoFilterBackend, OrderingFilter, SearchFilter,)
     search_fields = (
         'name',
     )
@@ -50,7 +54,7 @@ class FlowerCategoryView(generics.ListCreateAPIView):
 
     def get_queryset(self):
         return self.model.objects.filter(
-            is_deleted=False
+            # is_deleted=False
         ).order_by('name')
 
     def post(self, request, *args, **kwargs):
@@ -58,13 +62,12 @@ class FlowerCategoryView(generics.ListCreateAPIView):
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
 
-        # Check Flower Category exists
         is_existed = self.model.objects.filter(
             name=data.get('name'),
-            is_deleted=False
+            # is_deleted=False
         ).exists()
         if is_existed:
-            return Response(ErrorTemplate.AdminError.FLOWER_CATEGORY_ALREADY_EXISTED, status.HTTP_400_BAD_REQUEST)
+            return Response(ErrorTemplate.ROLE_EXIST, status.HTTP_400_BAD_REQUEST)
 
         # Save object
         serializer.save()
@@ -75,11 +78,11 @@ class FlowerCategoryView(generics.ListCreateAPIView):
         })
 
 # Retrieve - Update - Delete Flower Category
-class FlowerCategoryDetailsView(generics.RetrieveUpdateDestroyAPIView):
-    model = FlowerCategory
-    serializer_class = FlowerCategorySerializer
+class DetailUpdateDestroyRoleView(generics.RetrieveUpdateDestroyAPIView):
+    model = Role
+    serializer_class = RoleSerializer
     permission_classes = (IsAdmin,)
-    lookup_url_kwarg = 'flower_category_id'
+    lookup_url_kwarg = 'role_id'
 
     def get(self, request, *args, **kwargs):
         flower_category_id = self.kwargs.get(self.lookup_url_kwarg)
