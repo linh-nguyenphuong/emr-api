@@ -96,8 +96,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'emr_db',
-        'USER': 'root',
-        'PASSWORD': '12345679',
+        'USER': 'nhan',
+        'PASSWORD': '12345678',
         'HOST': '127.0.0.1',
         'PORT': '3306',
         'OPTIONS': {
@@ -145,3 +145,5 @@ USE_TZ = False
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+FCM_SERVER_KEY = 'AAAAPkJcP0I:APA91bH7fWrrpG7RmIHoyZUwY6Gm75e1O5PfWD6oanBVbOSIa7WwIXUfPyBbCpA2Noet3mIT20UqTefsw_cYb5cQWEz5VnTrWbP0abyYylrfgW3GbNfZs1OfkO_mptgMha3LCFt2boUR'
