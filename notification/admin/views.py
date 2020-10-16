@@ -34,6 +34,7 @@ from notification.models import Notification
 # Serializer imports
 from .serializers import (
     CreateNotificationSerializer,
+    ListOwnerNotificationSerializer
 )
 
 
@@ -48,7 +49,6 @@ class CreateNotificationView(generics.CreateAPIView):
         data = serializer.validated_data
 
         receives = data['receives']
-
         for receive in receives:
             user = User.objects.filter(id=receive,
                                        is_active=True).first()
@@ -68,3 +68,12 @@ class CreateNotificationView(generics.CreateAPIView):
         return Response({
             'message': True
         })
+
+
+class ListOwnerNotificationView(generics.ListAPIView):
+    model = Notification
+    serializer_class = ListOwnerNotificationSerializer
+    permission_classes = (IsAdmin,)
+
+    def get_queryset(self):
+        return self.model.objects.filter(sender=self.request.user)

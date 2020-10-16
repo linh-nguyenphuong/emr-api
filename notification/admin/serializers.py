@@ -21,3 +21,23 @@ class CreateNotificationSerializer(serializers.ModelSerializer):
             'content',
             'receives'
         )
+
+
+class ListOwnerNotificationSerializer(serializers.ModelSerializer):
+    receiver = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Notification
+        fields = (
+            'id',
+            'title',
+            'content',
+            'created_at',
+            'receiver'
+        )
+
+    @staticmethod
+    def get_receiver(instance):
+        if instance.receiver:
+            return instance.receiver.first_name + ' ' + instance.receiver.last_name
+        return None
