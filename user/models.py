@@ -52,7 +52,7 @@ class User(AbstractUser):
     DOB = models.DateField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     avatar = models.CharField(max_length=191, null=True, blank=True)
-
+    fcm_registration = models.CharField(max_length=191, null=True, blank=True)
     role = models.ForeignKey(Role, related_name='user_role', on_delete=models.Case)
 
     class Meta:

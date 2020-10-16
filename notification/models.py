@@ -9,6 +9,7 @@ from user.models import User
 
 class Notification(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    title = models.CharField(max_length=191)
     content = models.TextField()
     sender = models.ForeignKey(User, related_name='notification_sender', on_delete=models.Case)
     receiver = models.ForeignKey(User, related_name='notification_receiver', on_delete=models.Case)
