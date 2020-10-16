@@ -15,6 +15,7 @@ class Notification(models.Model):
     receiver = models.ForeignKey(User, related_name='notification_receiver', on_delete=models.Case)
     is_read = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
+    is_deleted = models.BooleanField(default=False)
 
     class Meta:
         db_table = 'notification'

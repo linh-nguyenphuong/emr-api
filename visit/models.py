@@ -16,6 +16,7 @@ class Visit(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(User, related_name='visit_created_by', on_delete=models.Case)
     status = models.CharField(max_length=20)
+    is_deleted = models.BooleanField(default=False)
 
     class Meta:
         db_table = 'visit'

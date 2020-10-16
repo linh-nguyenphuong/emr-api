@@ -6,6 +6,8 @@ import jwt
 from django.core.mail import send_mail
 from django.conf import settings
 from django.utils import dateparse
+from django.db.models import Q
+from django.contrib.auth import get_user_model
 
 # Django REST framework imports
 from rest_framework import generics
@@ -31,67 +33,15 @@ from templates.email_template import (
     EmailTemplate
 )
 
-
-
 # Model imports
 from user.models import User
 
 # Serialier imports
 from user.auth.serializers import (
-    SignUpSerializer,
     VerifyEmailSerializer,
     LoginSerializer,
     ChangePasswordSerializer
 )
-
-class SignUpView(generics.CreateAPIView):
-    model = User
-    serializer_class = SignUpSerializer
-    permission_classes = ()
-
-    def post(self, request, *args, **kwargs):
-
-        # Check email exist
-        email = self.model.objects.filter(
-            email=request.data.get('email'),
-        ).first()
-        if email:
-            return Response(ErrorTemplate.EMAIL_ALREADY_EXISTED)
-
-        serializer = self.serializer_class(data=request.data)
-        serializer.is_valid(raise_exception=True)
-
-        data = serializer.validated_data
-
-        user = User(
-            email = data.get('email'),
-            first_name = data.get('first_name'),
-            last_name = data.get('last_name'),
-            phone = data.get('phone'),
-            DOB = data.get('DOB'),
-        )
-        user.set_password(data.get('password'))
-
-        # Save to database
-        user.save() 
-
-        # Send validation link to user's email address
-        url = 'http://127.0.0.1:8000/api/auth/verify-email'
-        token = user.verify_email_token
-        send_mail(
-            subject=EmailTemplate.EmailConfirmation.SUBJECT,
-            html_message=EmailTemplate.EmailConfirmation.BODY.format(user.first_name, '{0}/{1}/'.format(url, token)),
-            message='',
-            from_email=settings.FROM_EMAIL,
-            recipient_list=[user.email],
-            fail_silently=False
-        )
-
-        serializer = self.serializer_class(instance=user)
-        return Response({
-            'success': True,
-            'data': serializer.data
-        })
 
 class VerifyEmailView(APIView):
     serializer_class = VerifyEmailSerializer
@@ -141,10 +91,7 @@ class VerifyEmailView(APIView):
         # Save to database
         user.save()
 
-        return Response({
-            'success': True,
-            'user': serializer.data
-        })
+        return Response(serializer.data)
 
 class LoginView(APIView):
     serializer_class = LoginSerializer
@@ -152,20 +99,33 @@ class LoginView(APIView):
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
+        data = serializer.validated_data
 
-        email = serializer.validated_data.get('email')
-        password = serializer.validated_data.get('password')
+        email = ''
+        phone = ''
+        if data.get('email'):
+            email = data.get('email')
+        if data.get('phone'):
+            phone = data.get('phone')
+        password = data.get('password')
 
-        # Check email
+        # Fetch the user by searching the email or phone
         user = User.objects.filter(
-            email=email
+            Q(email=email) | Q(phone=phone)
         ).first()
         if not user:
-            raise ValidationError(ErrorTemplate.INCORRECT_EMAIL)
+            # Run the default password hasher once to reduce the timing
+            # difference between an existing and a non-existing user (#20760).
+            User().set_password(password)
+            raise ValidationError(ErrorTemplate.INCORRECT_EMAIL_OR_PHONE)
 
         # Check email is verified
-        if not user.is_verified_email:
+        if not email == '' and not user.is_verified_email:
             raise ValidationError(ErrorTemplate.VERIFIED_EMAIL_REQUIRED)
+
+        # Check phone is verified
+        if not phone == '' and not user.is_verified_phone:
+            raise ValidationError(ErrorTemplate.VERIFIED_PHONE_REQUIRED)
 
         # Check password
         password_correct = user.check_password(password)
@@ -173,12 +133,10 @@ class LoginView(APIView):
             raise ValidationError(ErrorTemplate.INCORRECT_PASSWORD)
         
         return Response({
-            'success': True,
-            'data': {
-                'access_token': user.access_token,
-                'refresh_token': user.refresh_token
-            }
+            'access_token': user.access_token,
+            'refresh_token': user.refresh_token
         })
+    
 
 class RefreshTokenView(APIView):
     permission_classes = ()
@@ -211,10 +169,7 @@ class RefreshTokenView(APIView):
             raise AuthenticationFailed(msg)
 
         return Response({
-            'success': True,
-            'data': {
-                'access_token': user.access_token
-            }
+            'access_token': user.access_token
         })
 
 class ChangePasswordView(generics.UpdateAPIView):

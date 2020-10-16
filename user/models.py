@@ -18,6 +18,7 @@ from django.contrib.auth.hashers import (
 from role.models import Role
 
 class AbstractUser(models.Model):
+    USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ()
     
     is_anonymous = False
@@ -39,8 +40,8 @@ class AbstractUser(models.Model):
 
 class User(AbstractUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    email = models.EmailField(max_length=191, null=True, blank=True) 
-    phone = models.CharField(max_length=30, null=True, blank=True) # Patient use phone number to login
+    email = models.EmailField(max_length=191, null=True, blank=True, unique=True) 
+    phone = models.CharField(max_length=30, null=True, blank=True, unique=True) # Patient use phone number to login
     first_name = models.CharField(max_length=191, null=True, blank=True)
     last_name = models.CharField(max_length=191, null=True, blank=True)
     address = models.CharField(max_length=191, null=True, blank=True)
@@ -54,6 +55,7 @@ class User(AbstractUser):
     avatar = models.CharField(max_length=191, null=True, blank=True)
     fcm_registration = models.CharField(max_length=191, null=True, blank=True)
     role = models.ForeignKey(Role, related_name='user_role', on_delete=models.Case)
+    is_deleted = models.BooleanField(default=False)
 
     class Meta:
         db_table = 'user'

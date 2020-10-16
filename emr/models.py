@@ -16,6 +16,7 @@ class Emr(models.Model):
     status = models.CharField(max_length=20, default='initialized')
     total = models.DecimalField(max_digits=20, decimal_places=0)
     is_paid = models.BooleanField(default=False)
+    is_deleted = models.BooleanField(default=False)
 
     class Meta:
         db_table = 'emr'
@@ -24,6 +25,7 @@ class EmrImage(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     emr = models.ForeignKey(Emr, related_name='emr_image', on_delete=models.Case, null=True)
     url = models.CharField(max_length=191)
+    is_deleted = models.BooleanField(default=False)
 
     class Meta:
         db_table = 'emr_image'

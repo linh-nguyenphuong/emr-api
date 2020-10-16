@@ -13,6 +13,7 @@ class PatientService(models.Model):
     service = models.ForeignKey(Service, related_name='patient_service_service', on_delete=models.Case)
     emr = models.ForeignKey(Emr, related_name='patient_service_emr', on_delete=models.Case)
     created_at = models.DateTimeField(auto_now_add=True)
+    is_deleted = models.BooleanField(default=False)
 
     class Meta:
         db_table = 'patient_service'

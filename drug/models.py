@@ -15,6 +15,7 @@ class Drug(models.Model):
     price = models.DecimalField(max_digits=20, decimal_places=0)
     drug_category = models.ForeignKey(DrugCategory, related_name='drug_drug_category', on_delete=models.Case)
     drug_unit = models.ForeignKey(DrugUnit, related_name='drug_drug_unit', on_delete=models.Case)
+    is_deleted = models.BooleanField(default=False)
 
     class Meta:
         db_table = 'drug'

@@ -7,22 +7,6 @@ from rest_framework import serializers
 # Model imports
 from user.models import User
 
-class SignUpSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = User
-        fields = (
-            'id',
-            'email',
-            'password', 
-            'first_name', 
-            'last_name', 
-            'phone',
-            'DOB',)
-        extra_kwargs = {
-            'password': {'write_only': True}
-        }
-
 class VerifyEmailSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -42,7 +26,8 @@ class VerifyEmailSerializer(serializers.ModelSerializer):
         }
 
 class LoginSerializer(serializers.Serializer):
-    email = serializers.CharField(write_only=True)
+    email = serializers.CharField(write_only=True, required=False)
+    phone = serializers.CharField(write_only=True, required=False)
     password = serializers.CharField(write_only=True)
     access_token = serializers.CharField(read_only=True)
     refresh_token = serializers.CharField(read_only=True)

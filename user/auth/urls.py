@@ -3,7 +3,6 @@ from django.conf.urls import url, include
 
 # Application imports
 from user.auth.views import (
-    SignUpView,
     LoginView,
     RefreshTokenView,
     ChangePasswordView,
@@ -13,7 +12,6 @@ from user.auth.views import (
 )
 
 urlpatterns = [
-    url(r'^signup/$', SignUpView.as_view(), name='signup'),
     url(r'^login/$', LoginView.as_view(), name='login'),
     url(r'^change-password/$', ChangePasswordView.as_view(), name='change-password'),
     url(r'^verify-email/(?P<token>[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*)/$', VerifyEmailView.as_view(), name='verify-email'),
