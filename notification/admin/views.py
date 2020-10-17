@@ -50,6 +50,7 @@ class NotificationView(generics.ListCreateAPIView):
     def get_queryset(self):
         return self.model.objects.filter(is_deleted=False,
                                          created_at__gte=datetime.now()-timedelta(days=7),
+                                         sender=self.request.user
                                          ).order_by('-created_at')
 
     def post(self, request, *args, **kwargs):
@@ -79,38 +80,3 @@ class NotificationView(generics.ListCreateAPIView):
         return Response({
             'message': 'Send notice successfully'
         })
-
-
-# # Retrieve Role
-# class RoleDetailsView(generics.RetrieveAPIView):
-#     model = Role
-#     serializer_class = RoleSerializer
-#     permission_classes = ()
-#     lookup_url_kwarg = 'role_id'
-#
-#     def get(self, request, *args, **kwargs):
-#         role_id = self.kwargs.get(self.lookup_url_kwarg)
-#         role = self.get_object(role_id)
-#
-#         # Get serializer
-#         serializer = self.serializer_class(instance=role)
-#
-#         return Response(serializer.data)
-#
-#     def get_object(self, object_id):
-#         obj = self.model.objects.filter(
-#             id=object_id,
-#         ).first()
-#
-#         if not obj:
-#             raise ValidationError(ErrorTemplate.ROLE_NOT_EXIST)
-#
-#         return obj
-#
-#
-#
-#
-
-
-
-

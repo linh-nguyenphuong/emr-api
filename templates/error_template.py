@@ -98,3 +98,7 @@ class ErrorTemplate:
         ROLE_NOT_EXIST = dict(
             message='Mã chức danh không tồn tại.'
         )
+
+        DRUG_CATEGORY_NOT_EXIST = dict(
+            message='Mã loại thuốc không tồn tại.'
+        )
