@@ -26,66 +26,64 @@ from api.permissions import (
 )
 
 # Model imports
-from drug_category.models import (
-    DrugCategory
+from drug_instruction.models import (
+    DrugInstruction
 )
 
 # Serialier imports
-from drug_category.admin.serializers import (
-    DrugCategorySerializer,
+from drug_instruction.admin.serializers import (
+    DrugInstructionSerializer,
 )
 
 
 # List Role
-class DrugCategoryView(generics.ListCreateAPIView):
-    model = DrugCategory
-    serializer_class = DrugCategorySerializer
+class DrugInstructionView(generics.ListCreateAPIView):
+    model = DrugInstruction
+    serializer_class = DrugInstructionSerializer
     permission_classes = (IsAdmin,)
     pagination_class = None
-    search_fields = (
-        'name',
-    )
+
     def get_queryset(self):
-        return self.model.objects.filter(is_deleted=False).order_by('name')
+        return self.model.objects.filter(is_deleted=False).order_by('instruction')
 
     def post(self, request, *args, **kwargs):
-        serializer = DrugCategorySerializer(data=self.request.data)
+        serializer = self.serializer_class(data=self.request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
 
         return Response(serializer.data)
 
 
-class DrugCategoryDetailsView(generics.RetrieveUpdateDestroyAPIView):
-    model = DrugCategory
-    serializer_class = DrugCategorySerializer
+class DrugInstructionDetailsView(generics.RetrieveUpdateDestroyAPIView):
+    model = DrugInstruction
+    serializer_class = DrugInstructionSerializer
     permission_classes = (IsAdmin,)
-    lookup_url_kwarg = 'drug_category_id'
+    lookup_url_kwarg = 'drug_instruction_id'
 
     def get(self, request, *args, **kwargs):
-        drug_category_id = self.kwargs.get(self.lookup_url_kwarg)
-        drug_category = self.get_object(drug_category_id)
+        drug_instruction_id = self.kwargs.get(self.lookup_url_kwarg)
+        drug_instruction = self.get_object(drug_instruction_id)
 
         # Get serializer
-        serializer = self.serializer_class(instance=drug_category)
+        serializer = self.serializer_class(instance=drug_instruction)
 
         return Response(serializer.data)
 
     def put(self, request, *args, **kwargs):
-        drug_category_id = self.kwargs.get(self.lookup_url_kwarg)
-        drug_category = self.get_object(drug_category_id)
+        drug_instruction_id = self.kwargs.get(self.lookup_url_kwarg)
+        drug_instruction = self.get_object(drug_instruction_id)
 
         # Get serializer
-        serializer = self.serializer_class(drug_category, data=request.data)
+        serializer = self.serializer_class(drug_instruction, data=request.data)
         serializer.is_valid(raise_exception=False)
         data = request.data
 
-        drug_category.__dict__.update(
-            name=data.get('name'),
+        drug_instruction.__dict__.update(
+            instruction=data.get('instruction'),
         )
 
         # Save to database
-        drug_category.save()
+        drug_instruction.save()
 
         return Response(serializer.data)
 
@@ -111,6 +109,6 @@ class DrugCategoryDetailsView(generics.RetrieveUpdateDestroyAPIView):
         ).first()
 
         if not obj:
-            raise ValidationError(ErrorTemplate.DRUG_CATEGORY_NOT_EXIST)
+            raise ValidationError(ErrorTemplate.DRUG_INSTRUCTION_NOT_EXIST)
 
         return obj

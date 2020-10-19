@@ -16,6 +16,10 @@ from rest_framework.exceptions import (
     AuthenticationFailed
 )
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.filters import OrderingFilter, SearchFilter
+from django_filters.rest_framework import (
+    DjangoFilterBackend,
+)
 
 # Application imports
 from templates.error_template import (
@@ -26,79 +30,81 @@ from api.permissions import (
 )
 
 # Model imports
-from drug_category.models import (
-    DrugCategory
+from drug.models import (
+    Drug
 )
 
 # Serialier imports
-from drug_category.admin.serializers import (
-    DrugCategorySerializer,
+from drug.admin.serializers import (
+    DrugSerializer,
+    DrugDetailsSerializer
 )
 
 
 # List Role
-class DrugCategoryView(generics.ListCreateAPIView):
-    model = DrugCategory
-    serializer_class = DrugCategorySerializer
+class DrugView(generics.ListCreateAPIView):
+    model = Drug
+    serializer_class = DrugSerializer
     permission_classes = (IsAdmin,)
-    pagination_class = None
+    filter_backends = (DjangoFilterBackend, OrderingFilter, SearchFilter,)
     search_fields = (
         'name',
+        'code'
     )
+    filter_fields = (
+        'drug_category',
+    )
+    ordering_fields = (
+        'name',
+    )
+
     def get_queryset(self):
         return self.model.objects.filter(is_deleted=False).order_by('name')
 
     def post(self, request, *args, **kwargs):
-        serializer = DrugCategorySerializer(data=self.request.data)
+        serializer = self.serializer_class(data=self.request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
 
         return Response(serializer.data)
 
 
-class DrugCategoryDetailsView(generics.RetrieveUpdateDestroyAPIView):
-    model = DrugCategory
-    serializer_class = DrugCategorySerializer
+class DrugDetailsView(generics.RetrieveUpdateDestroyAPIView):
+    model = Drug
+    serializer_class = DrugDetailsSerializer
     permission_classes = (IsAdmin,)
-    lookup_url_kwarg = 'drug_category_id'
+    lookup_url_kwarg = 'drug_id'
 
     def get(self, request, *args, **kwargs):
-        drug_category_id = self.kwargs.get(self.lookup_url_kwarg)
-        drug_category = self.get_object(drug_category_id)
+        drug_id = self.kwargs.get(self.lookup_url_kwarg)
+        drug = self.get_object(drug_id)
 
         # Get serializer
-        serializer = self.serializer_class(instance=drug_category)
+        serializer = self.serializer_class(instance=drug)
 
         return Response(serializer.data)
 
     def put(self, request, *args, **kwargs):
-        drug_category_id = self.kwargs.get(self.lookup_url_kwarg)
-        drug_category = self.get_object(drug_category_id)
+        drug_id = self.kwargs.get(self.lookup_url_kwarg)
+        drug = self.get_object(drug_id)
 
         # Get serializer
-        serializer = self.serializer_class(drug_category, data=request.data)
+        serializer = DrugSerializer(drug, data=request.data)
         serializer.is_valid(raise_exception=False)
-        data = request.data
+        drug = serializer.save()
 
-        drug_category.__dict__.update(
-            name=data.get('name'),
-        )
-
-        # Save to database
-        drug_category.save()
-
-        return Response(serializer.data)
+        return Response(self.serializer_class(drug).data)
 
     def delete(self, request, *args, **kwargs):
-        drug_category_id = self.kwargs.get(self.lookup_url_kwarg)
-        drug_category = self.get_object(drug_category_id)
+        drug_id = self.kwargs.get(self.lookup_url_kwarg)
+        drug = self.get_object(drug_id)
 
-        drug_category.__dict__.update(
+        drug.__dict__.update(
             is_deleted=True,
         )
 
         # Save to database
-        drug_category.save()
+        drug.save()
 
         return Response({
             'message': 'Deleted successfully'
@@ -111,6 +117,6 @@ class DrugCategoryDetailsView(generics.RetrieveUpdateDestroyAPIView):
         ).first()
 
         if not obj:
-            raise ValidationError(ErrorTemplate.DRUG_CATEGORY_NOT_EXIST)
+            raise ValidationError(ErrorTemplate.DRUG_NOT_EXIST)
 
         return obj

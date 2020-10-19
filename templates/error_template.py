@@ -110,3 +110,23 @@ class ErrorTemplate:
         DRUG_CATEGORY_NOT_EXIST = dict(
             message='Mã loại thuốc không tồn tại.'
         )
+
+        DRUG_UNIT_NOT_EXIST = dict(
+            message='Mã đơn vị thuốc không tồn tại.'
+        )
+
+        DRUG_NOT_EXIST = dict(
+            message='Mã thuốc không tồn tại.'
+        )
+
+        DRUG_INSTRUCTION_NOT_EXIST = dict(
+            message='Mã hướng dẫn không tồn tại.'
+        )
+
+        DISEASE_CATEGORY_NOT_EXIST = dict(
+            message='Mã loại bệnh không tồn tại.'
+        )
+
+        DISEASE_NOT_EXIST = dict(
+            message='Mã bệnh không tồn tại.'
+        )
