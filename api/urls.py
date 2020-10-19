@@ -18,6 +18,7 @@ urlpatterns = [
     url(r'^api/admin/manage-drug-category/', include('drug_category.admin.urls'), name='api-admin-drug-category'),
     url(r'^api/admin/manage-drug-unit/', include('drug_unit.admin.urls'), name='api-admin-drug-unit'),
     url(r'^api/admin/manage-drug/', include('drug.admin.urls'), name='api-admin-drug'),
+    url(r'^api/admin/manage-drug-instruction/', include('drug_instruction.admin.urls'), name='api-admin-drug-instruction'),
 
     #------------------------------------------------------
     #                     User API
