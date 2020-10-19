@@ -16,6 +16,6 @@ urlpatterns = [
     url(r'^change-password/$', ChangePasswordView.as_view(), name='change-password'),
     url(r'^verify-email/(?P<token>[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*)/$', VerifyEmailView.as_view(), name='verify-email'),
     url(r'^refresh-token/$', RefreshTokenView.as_view(), name='refresh-token'),
-    url(r'^forgot-password/$', ForgotPasswordView.as_view(), name='forgot-password'),
-    url(r'^forgot-password/(?P<token>[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*)/$', ForgotPasswordDetailsView.as_view(), name='forgot-password-details'),
+    url(r'^forgot-password/email/$', ForgotPasswordView.as_view(), name='forgot-password'),
+    url(r'^forgot-password/email/(?P<token>[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*)/$', ForgotPasswordDetailsView.as_view(), name='forgot-password-details'),
 ]

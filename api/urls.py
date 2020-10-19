@@ -2,7 +2,6 @@ from django.conf.urls import url, include
 from .views import (
     index
 )
-
 urlpatterns = [
     url(r'^$', index),
     
@@ -20,6 +19,9 @@ urlpatterns = [
     #------------------------------------------------------
     #                     User API
     #------------------------------------------------------
-    # Profile
+    # Role
     url(r'^api/user/role/', include('role.user.urls'), name='api-user-role'),
+
+    # Profile
+    url(r'^api/user/profile/', include('user.profile.urls'), name='api-user-profile'),
 ]

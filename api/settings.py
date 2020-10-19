@@ -171,4 +171,18 @@ SENDGRID_API_KEY = key.SENDGRID_API_KEY
 FROM_EMAIL='emr@example.com'
 # Toggle sandbox mode (when running in DEBUG mode)
 SENDGRID_SANDBOX_MODE_IN_DEBUG=False
-#-----------------------------------------------------------------------------------------FCM_SERVER_KEY = 'AAAAPkJcP0I:APA91bH7fWrrpG7RmIHoyZUwY6Gm75e1O5PfWD6oanBVbOSIa7WwIXUfPyBbCpA2Noet3mIT20UqTefsw_cYb5cQWEz5VnTrWbP0abyYylrfgW3GbNfZs1OfkO_mptgMha3LCFt2boUR'
+#-----------------------------------------------------------------------------------------
+
+# Cloudinary
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+import cloudinary
+cloudinary.config(
+    cloud_name=key.CLOUDINARY_STORAGE['CLOUD_NAME'],
+    api_key=key.CLOUDINARY_STORAGE['API_KEY'],
+    api_secret=key.CLOUDINARY_STORAGE['API_SECRET']
+)
+#---------------------------------------------------------------------------
+
+# FCM
+FCM_APIKEY = key.FCM_SERVER_KEY

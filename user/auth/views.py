@@ -199,7 +199,7 @@ class ChangePasswordView(generics.UpdateAPIView):
         user.save()
 
         return Response({
-            'success': True,
+            'message': 'Password successfully updated.',
         })
     
     def get_user(self, user_id):
@@ -239,7 +239,7 @@ class ForgotPasswordView(APIView):
         )
 
         return Response({
-            'success': True,
+            'message': 'Password reset link has been sent to your email.',
         })
 
 # Verify reset password link, create new password
@@ -256,7 +256,7 @@ class ForgotPasswordDetailsView(APIView):
             return Response(ErrorTemplate.INVALID_RESET_PASSWORD_LINK)
 
         return Response({
-            'success': True
+            'message': 'The token is valid.'
         })
 
     def post(self, request, *args, **kwargs):
@@ -285,7 +285,7 @@ class ForgotPasswordDetailsView(APIView):
         user.save()
 
         return Response({
-            'success': True
+            'message': 'Password reset successfully.'
         })
 
     def verify_forgot_password_token(self, token):

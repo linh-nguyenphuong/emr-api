@@ -11,7 +11,13 @@ class IsAdmin(BasePermission):
 
 class IsUser(BasePermission):
     message = ErrorTemplate.USER_REQUIRED
-    user_role = ('receptionist', 'physician', 'patient')
 
     def has_permission(self, request, view):
+        user_role = ('receptionist', 'physician', 'patient')
         return request.user.role.name in user_role and request.user.is_active
+
+class IsPhysician(BasePermission):
+    message = ErrorTemplate.PHYSICIAN_REQUIRED
+
+    def has_permission(self, request, view):
+        return request.user.role.name == 'physician' and request.user.is_active

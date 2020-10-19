@@ -170,29 +170,37 @@ class UserDetailsView(generics.RetrieveUpdateDestroyAPIView):
             first_name=data.get('first_name'),
             last_name=data.get('last_name'),
             address=data.get('address'),
-            phone= data.get('phone'),
+            phone=data.get('phone'),
             DOB=data.get('DOB'),
             role_id=role.id
         )
 
-        # Complete create account for Admin, Physcian, Receptionist
-        if role.name == 'patient':
-            if not data.get('email') or data.get('email') == '':
-                return Response(ErrorTemplate.EMAIL_REQUIRED, status=status.HTTP_400_BAD_REQUEST)
+        # Complete update account for User
+        if data.get('email') and not data.get('email') == '':
+            # Check email existed
+            email = self.model.objects.filter(
+                email=data.get('email'),
+                is_deleted=False
+            ).exclude(
+                id=user.id
+            ).first()
+            if email:
+                return Response(ErrorTemplate.EMAIL_ALREADY_EXISTED, status=status.HTTP_400_BAD_REQUEST)
             else:
-                # Check email existed
-                email = self.model.objects.filter(
-                    email=data.get('email'),
-                    is_deleted=False
-                ).exclude(
-                    id=user.id
-                ).first()
-                if email:
-                    return Response(ErrorTemplate.EMAIL_ALREADY_EXISTED, status=status.HTTP_400_BAD_REQUEST)
-                user.email = data.get('email')
-        else:
-            if data.get('email') and not data.get('email') == '':
-                return Response(ErrorTemplate.CANNOT_UPDATE_EMAIL, status=status.HTTP_400_BAD_REQUEST)
+                user.email = email
+                user.is_active = False
+
+                # Send activation link to user's email address
+                url = 'http://127.0.0.1:8000/api/auth/verify-email'
+                token = user.verify_email_token
+                send_mail(
+                    subject=EmailTemplate.EmailConfirmation.SUBJECT,
+                    html_message=EmailTemplate.EmailConfirmation.BODY.format(user.first_name, '{0}/{1}/'.format(url, token)),
+                    message='',
+                    from_email=settings.FROM_EMAIL,
+                    recipient_list=[user.email],
+                    fail_silently=False
+                )
             
         # Save to database
         user.save()

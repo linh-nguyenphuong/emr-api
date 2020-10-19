@@ -7,6 +7,10 @@ class ErrorTemplate:
             message='Yêu cầu đăng nhập.'
         )
 
+        PHYSICIAN_REQUIRED = dict(
+            message='Yêu cầu đăng nhập bằng tài khoản bác sĩ.'
+        )
+
         EMAIL_REQUIRED = dict(
             message='Vui lòng nhập địa chỉ email.'
         )
@@ -16,7 +20,11 @@ class ErrorTemplate:
         )
 
         CANNOT_UPDATE_EMAIL = dict(
-            message='Không thể cập nhật địa chỉ email.'
+            message='Không cho phép cập nhật địa chỉ email.'
+        )
+
+        CANNOT_UPDATE_PHONE = dict(
+            message='Không cho phép cập nhật địa chỉ email.'
         )
 
         PHONE_REQUIRED = dict(
