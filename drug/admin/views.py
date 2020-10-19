@@ -16,6 +16,10 @@ from rest_framework.exceptions import (
     AuthenticationFailed
 )
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.filters import OrderingFilter, SearchFilter
+from django_filters.rest_framework import (
+    DjangoFilterBackend,
+)
 
 # Application imports
 from templates.error_template import (
@@ -42,9 +46,18 @@ class DrugView(generics.ListCreateAPIView):
     model = Drug
     serializer_class = DrugSerializer
     permission_classes = (IsAdmin,)
+    filter_backends = (DjangoFilterBackend, OrderingFilter, SearchFilter,)
     search_fields = (
         'name',
+        'code'
     )
+    filter_fields = (
+        'drug_category',
+    )
+    ordering_fields = (
+        'name',
+    )
+
     def get_queryset(self):
         return self.model.objects.filter(is_deleted=False).order_by('name')
 
