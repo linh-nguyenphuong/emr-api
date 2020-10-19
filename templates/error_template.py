@@ -118,3 +118,7 @@ class ErrorTemplate:
         DISEASE_CATEGORY_NOT_EXIST = dict(
             message='Mã loại bệnh không tồn tại.'
         )
+
+        DISEASE_NOT_EXIST = dict(
+            message='Mã bệnh không tồn tại.'
+        )
