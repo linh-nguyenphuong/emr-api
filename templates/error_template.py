@@ -106,3 +106,7 @@ class ErrorTemplate:
         DRUG_UNIT_NOT_EXIST = dict(
             message='Mã đơn vị thuốc không tồn tại.'
         )
+
+        DRUG_NOT_EXIST = dict(
+            message='Mã thuốc không tồn tại.'
+        )
