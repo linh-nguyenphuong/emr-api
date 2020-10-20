@@ -19,6 +19,7 @@ class PublicProfileSerializer(serializers.ModelSerializer):
             'id',
             'first_name',
             'last_name',
+            'gender', 
             'role',
             'avatar'
         )
@@ -34,7 +35,8 @@ class PrivateProfileSerializer(serializers.ModelSerializer):
             'phone',
             'address',
             'first_name', 
-            'last_name', 
+            'last_name',
+            'gender', 
             'DOB',
             'avatar',
             'role',
