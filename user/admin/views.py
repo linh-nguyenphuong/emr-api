@@ -102,7 +102,10 @@ class UserView(generics.ListCreateAPIView):
                 if email:
                     return Response(ErrorTemplate.EMAIL_ALREADY_EXISTED, status=status.HTTP_400_BAD_REQUEST)
                 user.email = data.get('email')
-            
+        if role.name in ('patient',):
+            if not data.get('phone') or data.get('phone') == '':
+                return Response(ErrorTemplate.PHONE_REQUIRED, status=status.HTTP_400_BAD_REQUEST)
+
         # Save to database
         user.save()
 
