@@ -23,57 +23,57 @@ from api.permissions import (
 )
 
 # Model imports
-from working_hours.models import (
-    WorkingHours
+from setting.models import (
+    Setting
 )
 
 # Serialier imports
-from working_hours.admin.serializers import (
-    WorkingSerializer,
+from setting.admin.serializers import (
+    SettingsSerializer,
 )
 
 # List Role
-class WorkingView(generics.ListAPIView):
-    model = WorkingHours
-    serializer_class = WorkingSerializer
+class SettingView(generics.ListAPIView):
+    model = Setting
+    serializer_class = SettingsSerializer
     permission_classes = ()
     pagination_class = None
 
     def get_queryset(self):
-        return self.model.objects.all().order_by('weekday')
+        return self.model.objects.all().order_by('attribute')
 
 # Retrieve Role
-class WorkingDetailsView(generics.RetrieveAPIView, generics.UpdateAPIView):
-    model = WorkingHours
-    serializer_class = WorkingSerializer
+class SettingDetailsView(generics.RetrieveAPIView, generics.UpdateAPIView):
+    model = Setting
+    serializer_class = SettingsSerializer
     permission_classes = ()
-    lookup_url_kwarg = 'working_id'
+    lookup_url_kwarg = 'setting_id'
 
     def get(self, request, *args, **kwargs):
-        working_id = self.kwargs.get(self.lookup_url_kwarg)
-        working = self.get_object(working_id)
+        setting_id = self.kwargs.get(self.lookup_url_kwarg)
+        setting = self.get_object(setting_id)
         
         # Get serializer
-        serializer = self.serializer_class(instance=working)
+        serializer = self.serializer_class(instance=setting)
         
         return Response(serializer.data)
 
     def put(self, request, *args, **kwargs):
-        working_id = self.kwargs.get(self.lookup_url_kwarg)
-        working = self.get_object(working_id)
+        setting_id = self.kwargs.get(self.lookup_url_kwarg)
+        setting = self.get_object(setting_id)
 
         # Get serializer
-        serializer = self.serializer_class(working, data=request.data)
+        serializer = self.serializer_class(setting, data=request.data)
         serializer.is_valid(raise_exception=False)
         data = request.data
 
-        working.__dict__.update(
-            weekday=data.get('weekday'),
-            is_closed=data.get('is_closed')
+        setting.__dict__.update(
+            attribute=data.get('attribute'),
+            value=data.get('value')
         )
 
         # Save to database
-        working.save()
+        setting.save()
 
         return Response(serializer.data)
     def get_object(self, object_id):

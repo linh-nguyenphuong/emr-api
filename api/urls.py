@@ -29,6 +29,8 @@ urlpatterns = [
 
     url(r'^api/admin/manage-working-hours/', include('working_hours.admin.urls'), name='api-admin-service'),
 
+    url(r'^api/admin/manage-setting/', include('setting.admin.urls'), name='api-admin-setting'),
+
     #------------------------------------------------------
     #                     User API
     #------------------------------------------------------
