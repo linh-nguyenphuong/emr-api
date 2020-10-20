@@ -82,7 +82,7 @@ class SettingDetailsView(generics.RetrieveAPIView, generics.UpdateAPIView):
         ).first()
 
         if not obj:
-            raise ValidationError(ErrorTemplate.ROLE_NOT_EXIST)
+            raise ValidationError(ErrorTemplate.SETTING_NOT_EXIST)
 
         return obj
 

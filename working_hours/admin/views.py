@@ -82,7 +82,7 @@ class WorkingDetailsView(generics.RetrieveAPIView, generics.UpdateAPIView):
         ).first()
 
         if not obj:
-            raise ValidationError(ErrorTemplate.ROLE_NOT_EXIST)
+            raise ValidationError(ErrorTemplate.WORKING_NOT_EXIST)
 
         return obj
 

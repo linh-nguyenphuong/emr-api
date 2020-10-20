@@ -31,6 +31,8 @@ urlpatterns = [
 
     url(r'^api/admin/manage-setting/', include('setting.admin.urls'), name='api-admin-setting'),
 
+    url(r'^api/admin/manage-room/', include('room.admin.urls'), name='api-admin-room'),
+
     #------------------------------------------------------
     #                     User API
     #------------------------------------------------------

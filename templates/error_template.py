@@ -134,3 +134,15 @@ class ErrorTemplate:
         SERVICE_NOT_EXIST = dict(
             message='Mã dịch vụ không tồn tại.'
         )
+
+        WORKING_NOT_EXIST = dict(
+            message='Mã làm việc không tồn tại.'
+        )
+
+        SETTING_NOT_EXIST = dict(
+            message='Mã cấu hình không tồn tại.'
+        )
+
+        ROOM_NOT_EXIST = dict(
+            message='Mã phòng không tồn tại.'
+        )
