@@ -146,3 +146,19 @@ class ErrorTemplate:
         ROOM_NOT_EXIST = dict(
             message='Mã phòng không tồn tại.'
         )
+
+        PATIENT_REQUIRED = dict(
+            message='Mã bệnh nhân không đúng.'
+        )
+
+        PHYSICIAN_REQUIRED = dict(
+            message='Mã bác sĩ không đúng.'
+        )
+
+        APPOINTMENT_NOT_EXIST = dict(
+            message='Mã cuộc hẹn không tồn tại.'
+        )
+
+        APPOINTMENT_NOT_UPDATE = dict(
+            message='Cuộc hẹn đã được chấp nhận, không thể update.'
+        )
