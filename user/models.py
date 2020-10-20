@@ -56,6 +56,12 @@ class User(AbstractUser):
     fcm_registration = models.CharField(max_length=191, null=True, blank=True)
     role = models.ForeignKey(Role, related_name='user_role', on_delete=models.Case)
     is_deleted = models.BooleanField(default=False)
+    GENDER_CHOICES = (
+        ('Nam', 'Nam'),
+        ('Nữ', 'Nữ'),
+        ('Khác', 'Khác')
+    )
+    gender = models.CharField(max_length=5, choices=GENDER_CHOICES, default='Nam')
 
     class Meta:
         db_table = 'user'

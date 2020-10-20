@@ -86,6 +86,7 @@ class UserView(generics.ListCreateAPIView):
             address=data.get('address'),
             phone= data.get('phone'),
             DOB=data.get('DOB'),
+            gender=data.get('gender'),
             role=role
         )
         user.set_password(data.get('password'))
@@ -172,6 +173,7 @@ class UserDetailsView(generics.RetrieveUpdateDestroyAPIView):
             address=data.get('address'),
             phone=data.get('phone'),
             DOB=data.get('DOB'),
+            gender=data.get('gender'),
             role_id=role.id
         )
 

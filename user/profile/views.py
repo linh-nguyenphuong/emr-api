@@ -103,6 +103,7 @@ class ProfileDetailsView(generics.RetrieveUpdateAPIView):
             last_name=data.get('last_name'),
             address=data.get('address'),
             DOB=data.get('DOB'),
+            gender=data.get('gender')
         )
             
         # Save to database
