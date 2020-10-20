@@ -52,6 +52,9 @@ class UserView(generics.ListCreateAPIView):
         'email', 
         'phone'
     )
+    filter_fields = {
+        'role__name': ['exact'],
+    }
 
     def get_queryset(self):
         return self.model.objects.filter(

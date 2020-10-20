@@ -5,3 +5,7 @@ __pycache__/
 *.vscode
 upload/*
 key.py
+env.py
+app.yaml
+main.py
+.gcloudignore

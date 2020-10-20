@@ -25,7 +25,7 @@ SECRET_KEY = '6eoc94l@t*bi2w3vm(-d7#dqr($rkuzgg$f6#@1b)smkzg*j7i'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['emr-2020.wl.r.appspot.com', '127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -92,8 +92,14 @@ WSGI_APPLICATION = 'api.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
+import env
 
-DATABASES = {
+if hasattr(env, 'GOOGLE_CLOUD_SQL'):
+    DATABASES = {
+        'default': env.GOOGLE_CLOUD_SQL
+    }
+else:
+    DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'emr_db',
@@ -165,9 +171,8 @@ REST_FRAMEWORK = {
 #-----------------------------------------------------------------------------------------
 
 # Sendgrid
-import key
 EMAIL_BACKEND = 'sendgrid_backend.SendgridBackend'
-SENDGRID_API_KEY = key.SENDGRID_API_KEY
+SENDGRID_API_KEY = env.SENDGRID_API_KEY
 FROM_EMAIL='emr@example.com'
 # Toggle sandbox mode (when running in DEBUG mode)
 SENDGRID_SANDBOX_MODE_IN_DEBUG=False
@@ -178,11 +183,11 @@ DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 import cloudinary
 cloudinary.config(
-    cloud_name=key.CLOUDINARY_STORAGE['CLOUD_NAME'],
-    api_key=key.CLOUDINARY_STORAGE['API_KEY'],
-    api_secret=key.CLOUDINARY_STORAGE['API_SECRET']
+    cloud_name=env.CLOUDINARY_STORAGE['CLOUD_NAME'],
+    api_key=env.CLOUDINARY_STORAGE['API_KEY'],
+    api_secret=env.CLOUDINARY_STORAGE['API_SECRET']
 )
 #---------------------------------------------------------------------------
 
 # FCM
-FCM_APIKEY = key.FCM_SERVER_KEY
+FCM_SERVER_KEY = env.FCM_SERVER_KEY
