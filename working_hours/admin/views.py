@@ -23,31 +23,31 @@ from api.permissions import (
 )
 
 # Model imports
-from role.models import (
-    Role
+from working_hours.models import (
+    WorkingHours
 )
 
 # Serialier imports
-from role.user.serializers import (
-    RoleSerializer,
+from working_hours.admin.serializers import (
+    WorkingSerializer,
 )
 
 # List Role
-class RoleView(generics.ListAPIView):
-    model = Role
-    serializer_class = RoleSerializer
-    permission_classes = (IsAdmin, )
+class WorkingView(generics.ListAPIView):
+    model = WorkingHours
+    serializer_class = WorkingSerializer
+    permission_classes = ()
     pagination_class = None
 
     def get_queryset(self):
-        return self.model.objects.all().order_by('name')
+        return self.model.objects.all().order_by('weekday')
 
 # Retrieve Role
-class RoleDetailsView(generics.RetrieveAPIView):
-    model = Role
-    serializer_class = RoleSerializer
-    permission_classes = (IsAdmin,)
-    lookup_url_kwarg = 'role_id'
+class WorkingDetailsView(generics.RetrieveAPIView, generics.UpdateAPIView):
+    model = WorkingHours
+    serializer_class = WorkingSerializer
+    permission_classes = ()
+    lookup_url_kwarg = 'working_id'
 
     def get(self, request, *args, **kwargs):
         role_id = self.kwargs.get(self.lookup_url_kwarg)
@@ -58,6 +58,24 @@ class RoleDetailsView(generics.RetrieveAPIView):
         
         return Response(serializer.data)
 
+    def put(self, request, *args, **kwargs):
+        service_id = self.kwargs.get(self.lookup_url_kwarg)
+        service = self.get_object(service_id)
+
+        # Get serializer
+        serializer = self.serializer_class(service, data=request.data)
+        serializer.is_valid(raise_exception=False)
+        data = request.data
+
+        service.__dict__.update(
+            weekday=data.get('weekday'),
+            is_closed=data.get('is_closed')
+        )
+
+        # Save to database
+        service.save()
+
+        return Response(serializer.data)
     def get_object(self, object_id):
         obj = self.model.objects.filter(
             id=object_id,
