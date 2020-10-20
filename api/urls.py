@@ -15,7 +15,9 @@ urlpatterns = [
     url(r'^api/admin/manage-notification/', include('notification.admin.urls'), name='api-admin-notification'),
     # User
     url(r'^api/admin/manage-user/', include('user.admin.urls'), name='api-admin-user'),
-    # Drug category
+
+    url(r'^api/admin/manage-role/', include('role.admin.urls'), name='api-admin-role'),
+
     url(r'^api/admin/manage-drug-category/', include('drug_category.admin.urls'), name='api-admin-drug-category'),
     # Drug unit
     url(r'^api/admin/manage-drug-unit/', include('drug_unit.admin.urls'), name='api-admin-drug-unit'),
@@ -29,6 +31,14 @@ urlpatterns = [
     url(r'^api/admin/manage-disease/', include('disease.admin.urls'), name='api-admin-disease'),
     # Service
     url(r'^api/admin/manage-service/', include('service.admin.urls'), name='api-admin-service'),
+
+    url(r'^api/admin/manage-working-hours/', include('working_hours.admin.urls'), name='api-admin-service'),
+
+    url(r'^api/admin/manage-setting/', include('setting.admin.urls'), name='api-admin-setting'),
+
+    url(r'^api/admin/manage-room/', include('room.admin.urls'), name='api-admin-room'),
+
+    url(r'^api/admin/manage-appointment/', include('appointment.admin.urls'), name='api-admin-appointment'),
 
     #------------------------------------------------------
     #                     User API

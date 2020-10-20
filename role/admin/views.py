@@ -28,7 +28,7 @@ from role.models import (
 )
 
 # Serialier imports
-from role.user.serializers import (
+from role.admin.serializers import (
     RoleSerializer,
 )
 
@@ -36,7 +36,7 @@ from role.user.serializers import (
 class RoleView(generics.ListAPIView):
     model = Role
     serializer_class = RoleSerializer
-    permission_classes = (IsAdmin, )
+    permission_classes = ()
     pagination_class = None
 
     def get_queryset(self):
@@ -46,7 +46,7 @@ class RoleView(generics.ListAPIView):
 class RoleDetailsView(generics.RetrieveAPIView):
     model = Role
     serializer_class = RoleSerializer
-    permission_classes = (IsAdmin,)
+    permission_classes = ()
     lookup_url_kwarg = 'role_id'
 
     def get(self, request, *args, **kwargs):
