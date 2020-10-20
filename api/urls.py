@@ -23,6 +23,8 @@ urlpatterns = [
     url(r'^api/admin/manage-disease-category/', include('disease_category.admin.urls'), name='api-admin-disease-category'),
     url(r'^api/admin/manage-disease/', include('disease.admin.urls'), name='api-admin-disease'),
 
+    url(r'^api/admin/manage-service/', include('service.admin.urls'), name='api-admin-service'),
+
     #------------------------------------------------------
     #                     User API
     #------------------------------------------------------

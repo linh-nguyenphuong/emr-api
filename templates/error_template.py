@@ -130,3 +130,7 @@ class ErrorTemplate:
         DISEASE_NOT_EXIST = dict(
             message='Mã bệnh không tồn tại.'
         )
+
+        SERVICE_NOT_EXIST = dict(
+            message='Mã dịch vụ không tồn tại.'
+        )
