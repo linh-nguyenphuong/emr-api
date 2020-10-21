@@ -8,15 +8,11 @@ from templates.error_template import ErrorTemplate
 
 # Model imports
 from notification.models import Notification
-from user.models import User
 
 
 class SendNotificationSerializer(serializers.ModelSerializer):
     title = serializers.CharField()
-    receivers = serializers.ListField(
-        child=serializers.ChoiceField(
-            choices=User.objects.filter(is_deleted=False,
-                                        is_active=True).values_list('id', flat=True)))
+    receivers = serializers.ListField(allow_null=True)
 
     class Meta:
         model = Notification

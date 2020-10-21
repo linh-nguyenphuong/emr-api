@@ -61,21 +61,22 @@ class NotificationView(generics.ListCreateAPIView):
         fcm = FCMNotification(api_key=settings.FCM_SERVER_KEY)
         for receiver in data['receivers']:
             user = User.objects.filter(id=receiver).first()
-            if user.fcm_registration:
-                registration_id = user.fcm_registration
+            if user:
+                if user.fcm_registration:
+                    registration_id = user.fcm_registration
 
-                fcm.notify_single_device(
-                    registration_id=registration_id,
-                    message_title=data['title'],
-                    message_body=data['body'],
-                    sound="default",
+                    fcm.notify_single_device(
+                        registration_id=registration_id,
+                        message_title=data['title'],
+                        message_body=data['body'],
+                        sound="default",
+                    )
+                Notification.objects.create(
+                    title=data['title'],
+                    content=data['content'],
+                    receiver=user,
+                    sender=self.request.user
                 )
-            Notification.objects.create(
-                title=data['title'],
-                content=data['content'],
-                receiver=user,
-                sender=self.request.user
-            )
 
         return Response({
             'message': 'Send notice successfully'
