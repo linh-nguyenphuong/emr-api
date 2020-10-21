@@ -162,3 +162,7 @@ class ErrorTemplate:
         APPOINTMENT_NOT_UPDATE = dict(
             message='Cuộc hẹn đã được chấp nhận, không thể update.'
         )
+
+        VISIT_NOT_EXIST = dict(
+            message='Mã đến khám không tồn tại.'
+        )

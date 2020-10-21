@@ -41,6 +41,8 @@ urlpatterns = [
 
     url(r'^api/admin/manage-appointment/', include('appointment.admin.urls'), name='api-admin-appointment'),
 
+    url(r'^api/admin/manage-visit/', include('visit.admin.urls'), name='api-admin-visit'),
+
     #------------------------------------------------------
     #                     User API
     #------------------------------------------------------
