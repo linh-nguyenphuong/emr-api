@@ -43,6 +43,8 @@ urlpatterns = [
 
     url(r'^api/admin/manage-visit/', include('visit.admin.urls'), name='api-admin-visit'),
 
+    url(r'^api/admin/manage-emr/', include('emr.admin.urls'), name='api-admin-emr'),
+
     #------------------------------------------------------
     #                     User API
     #------------------------------------------------------
