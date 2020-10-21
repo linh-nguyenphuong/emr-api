@@ -66,10 +66,20 @@ class VisitView(generics.ListCreateAPIView):
 
         patient = data['patient']
         if patient and patient.role.name == 'patient':
-            serializer.save(created_by=self.request.user)
+            number = self.model.objects.filter(
+                room=data['room'],
+                created_at__day=datetime.now().day,
+                created_at__month=datetime.now().month,
+                created_at__year=datetime.now().year
+            ).order_by('-visit_number')
+            if not number:
+                number = 1
+            else:
+                number = number.first().visit_number
+            serializer.save(created_by=self.request.user,
+                            visit_number=number+1)
             return Response(serializer.data)
         raise ValidationError(ErrorTemplate.PATIENT_REQUIRED)
-
 
 
 class VisitDetailsView(generics.RetrieveUpdateDestroyAPIView):

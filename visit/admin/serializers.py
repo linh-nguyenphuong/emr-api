@@ -10,17 +10,17 @@ from templates.error_template import ErrorTemplate
 from visit.models import Visit
 
 class VisitSerializer(serializers.ModelSerializer):
-    visit_number = serializers.IntegerField()
 
     class Meta:
         model = Visit
         fields = (
             'id',
-            'visit_number',
             'patient',
             'room',
-            'created_at'
+            'created_at',
+            'visit_number'
         )
         extra_kwargs = {
             'id': {'read_only': True},
+            'visit_number': {'read_only': True},
         }
