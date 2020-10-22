@@ -15,6 +15,9 @@ from emr_drug.models import EmrDrug
 from emr_disease.models import EmrDisease
 from patient_service.models import PatientService
 
+from drug.admin.serializers import DrugSerializer
+
+
 class EmrSerializer(serializers.ModelSerializer):
     emr_drug = serializers.SerializerMethodField()
     emr_disease = serializers.SerializerMethodField()
@@ -44,9 +47,14 @@ class EmrSerializer(serializers.ModelSerializer):
     def get_emr_drug(obj):
         emr_drug = EmrDrug.objects.filter(emr=obj,
                                           is_deleted=False)
-        if emr_drug:
-            return emr_drug.values()
-        return None
+        list_drug = []
+        for drug in emr_drug:
+            list_drug.append(
+                dict(
+                    id=drug.id,
+                    drug=DrugSerializer(drug.drug).data
+                ))
+        return list_drug
 
     @staticmethod
     def get_emr_disease(obj):
