@@ -4,4 +4,8 @@ __pycache__/
 *$py.class
 *.vscode
 upload/*
-key.py
+env.py
+.gcloudignore
+app.yaml
+env.py
+main.py
