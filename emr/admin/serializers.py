@@ -34,13 +34,16 @@ class EmrSerializer(serializers.ModelSerializer):
             'emr_disease',
             'emr_service',
             'image',
-            'total'
+            'total',
+            'status',
+            'is_paid'
         )
         extra_kwargs = {
             'id': {'read_only': True},
             'emr_drug': {'read_only': True},
             'emr_disease': {'read_only': True},
             'image': {'read_only': True},
+            'total': {'read_only': True},
         }
 
     @staticmethod
@@ -93,3 +96,16 @@ class EmrSerializer(serializers.ModelSerializer):
         if image:
             return image.values()
         return None
+
+
+class EmrImageSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = EmrImage
+        fields = (
+            'id',
+            'url'
+        )
+        extra_kwargs = {
+            'id': {'read_only': True},
+        }

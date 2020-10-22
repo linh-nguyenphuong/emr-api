@@ -49,6 +49,8 @@ class EmrDiseaseAddView(generics.CreateAPIView):
 
     def post(self, request, *args, **kwargs):
         emr = Emr.objects.filter(id=self.kwargs.get(self.lookup_url_kwarg)).first()
+        if not emr:
+            raise ValidationError(ErrorTemplate.EMR_NOT_EXIST)
 
         serializer = self.serializer_class(data=self.request.data)
         serializer.is_valid(raise_exception=True)

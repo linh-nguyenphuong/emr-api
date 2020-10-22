@@ -52,11 +52,15 @@ class EmrServiceView(generics.ListCreateAPIView):
     def get_queryset(self):
         self.serializer_class = ServiceSerializer
         emr = Emr.objects.filter(id=self.kwargs.get(self.lookup_url_kwarg)).first()
+        if not emr:
+            raise ValidationError(ErrorTemplate.EMR_NOT_EXIST)
         list_service = PatientService.objects.filter(emr=emr, is_deleted=False)
         return Service.objects.filter(id__in=(list_service.values_list('service', flat=True)))
 
     def post(self, request, *args, **kwargs):
         emr = Emr.objects.filter(id=self.kwargs.get(self.lookup_url_kwarg)).first()
+        if not emr:
+            raise ValidationError(ErrorTemplate.EMR_NOT_EXIST)
 
         serializer = self.serializer_class(data=self.request.data)
         serializer.is_valid(raise_exception=True)
