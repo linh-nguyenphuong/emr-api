@@ -108,6 +108,8 @@ class EmrDetailsView(generics.RetrieveUpdateDestroyAPIView):
         emr = self.get_object(emr_id)
 
         # Get serializer
+        if emr.status == 'complete':
+            raise ValidationError(ErrorTemplate.EMR_NOT_UPDATE)
         serializer = EmrSerializer(emr, data=request.data)
         serializer.is_valid(raise_exception=False)
         drug = serializer.save()

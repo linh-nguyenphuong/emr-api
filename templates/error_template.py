@@ -178,3 +178,7 @@ class ErrorTemplate:
         EMR_NOT_EXIST = dict(
             message='Mã bệnh án không tồn tại.'
         )
+
+        EMR_NOT_UPDATE = dict(
+            message='Bệnh án đã hoàn thành, không thể update.'
+        )
