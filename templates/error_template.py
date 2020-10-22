@@ -151,7 +151,7 @@ class ErrorTemplate:
             message='Mã bệnh nhân không đúng.'
         )
 
-        PHYSICIAN_REQUIRED = dict(
+        PHYSICIAN_NOT_EXIST = dict(
             message='Mã bác sĩ không đúng.'
         )
 

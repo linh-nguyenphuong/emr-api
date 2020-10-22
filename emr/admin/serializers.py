@@ -30,7 +30,8 @@ class EmrSerializer(serializers.ModelSerializer):
             'emr_drug',
             'emr_disease',
             'emr_service',
-            'image'
+            'image',
+            'total'
         )
         extra_kwargs = {
             'id': {'read_only': True},

@@ -79,97 +79,65 @@ class EmrView(generics.ListCreateAPIView):
 
         patient = data['physician']
         if not patient or not patient.role.name == 'physician':
-            raise ValidationError(ErrorTemplate.PHYSICIAN_REQUIRED)
+            raise ValidationError(ErrorTemplate.PHYSICIAN_NOT_EXIST)
 
-        emr = serializer.save(created_by=self.request.user,
+        serializer.save(created_by=self.request.user,
                               total=total)
-
-        data_drug = self.request.data.get('drug')
-        if data_drug:
-            for drug in data_drug:
-                if Drug.objects.filter(id=drug['drug'], is_deleted=False).exists() and \
-                        DrugInstruction.objects.filter(id=drug['drug_instruction']).exists():
-                    EmrDrug.objects.create(emr=emr,
-                                           drug=drug['drug'],
-                                           drug_instruction=drug['drug_instruction'],
-                                           quantity=drug['quantity'],
-                                           unit_price=drug['unit_price'])
-                    total = total + drug['quantity']
-        data_disease = self.request.data.get('disease')
-        if data_disease:
-            for disease in data_disease:
-                disease = Disease.objects.filter(id=disease).first()
-                if disease:
-                    EmrDisease.objects.create(emr=emr,
-                                              disease=disease)
-
-        data_service = self.request.data.get('service')
-        if data_service:
-            for service in data_disease:
-                service = Service.objects.filter(id=service).first()
-                if service:
-                    PatientService.objects.create(emr=emr,
-                                                  service=service,
-                                                  created_at=datetime.now())
-
-        data_image = self.request.data.get('image')
-        if data_image:
-            for image in data_image:
-                EmrImage.objects.create(emr=emr,
-                                        url=image)
-        emr.total = total
-        emr.save()
         return Response(serializer.data)
-#
-#
-# class DrugDetailsView(generics.RetrieveUpdateDestroyAPIView):
-#     model = Drug
-#     serializer_class = DrugDetailsSerializer
-#     permission_classes = (IsAdmin,)
-#     lookup_url_kwarg = 'drug_id'
-#
-#     def get(self, request, *args, **kwargs):
-#         drug_id = self.kwargs.get(self.lookup_url_kwarg)
-#         drug = self.get_object(drug_id)
-#
-#         # Get serializer
-#         serializer = self.serializer_class(instance=drug)
-#
-#         return Response(serializer.data)
-#
-#     def put(self, request, *args, **kwargs):
-#         drug_id = self.kwargs.get(self.lookup_url_kwarg)
-#         drug = self.get_object(drug_id)
-#
-#         # Get serializer
-#         serializer = DrugSerializer(drug, data=request.data)
-#         serializer.is_valid(raise_exception=False)
-#         drug = serializer.save()
-#
-#         return Response(self.serializer_class(drug).data)
-#
-#     def delete(self, request, *args, **kwargs):
-#         drug_id = self.kwargs.get(self.lookup_url_kwarg)
-#         drug = self.get_object(drug_id)
-#
-#         drug.__dict__.update(
-#             is_deleted=True,
-#         )
-#
-#         # Save to database
-#         drug.save()
-#
-#         return Response({
-#             'message': 'Deleted successfully'
-#         })
-#
-#     def get_object(self, object_id):
-#         obj = self.model.objects.filter(
-#             id=object_id,
-#             is_deleted=False
-#         ).first()
-#
-#         if not obj:
-#             raise ValidationError(ErrorTemplate.DRUG_NOT_EXIST)
-#
-#         return obj
+
+
+class EmrDetailsView(generics.RetrieveUpdateDestroyAPIView):
+    model = Emr
+    serializer_class = EmrSerializer
+    permission_classes = (IsAdmin,)
+    lookup_url_kwarg = 'emr_id'
+
+    def get(self, request, *args, **kwargs):
+        emr_id = self.kwargs.get(self.lookup_url_kwarg)
+        emr = self.get_object(emr_id)
+
+        # Get serializer
+        serializer = self.serializer_class(instance=emr)
+
+        return Response(serializer.data)
+
+    def put(self, request, *args, **kwargs):
+        emr_id = self.kwargs.get(self.lookup_url_kwarg)
+        emr = self.get_object(emr_id)
+
+        # Get serializer
+        serializer = EmrSerializer(emr, data=request.data)
+        serializer.is_valid(raise_exception=False)
+        drug = serializer.save()
+
+        return Response(self.serializer_class(drug).data)
+
+    def delete(self, request, *args, **kwargs):
+        emr_id = self.kwargs.get(self.lookup_url_kwarg)
+        emr = self.get_object(emr_id)
+
+        emr.__dict__.update(
+            is_deleted=True,
+        )
+
+        EmrImage.objects.filter(emr=emr).update(is_deleted=True)
+        EmrDrug.objects.filter(emr=emr).update(is_deleted=True)
+        EmrDisease.objects.filter(emr=emr).update(is_deleted=True)
+        PatientService.objects.filter(emr=emr).update(is_deleted=True)
+        # Save to database
+        emr.save()
+
+        return Response({
+            'message': 'Deleted successfully'
+        })
+
+    def get_object(self, object_id):
+        obj = self.model.objects.filter(
+            id=object_id,
+            is_deleted=False
+        ).first()
+
+        if not obj:
+            raise ValidationError(ErrorTemplate.DRUG_NOT_EXIST)
+
+        return obj

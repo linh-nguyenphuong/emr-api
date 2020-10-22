@@ -16,34 +16,54 @@ urlpatterns = [
 
     # User
     url(r'^api/admin/manage-user/', include('user.admin.urls'), name='api-admin-user'),
+
     # Role
     url(r'^api/admin/manage-role/', include('role.admin.urls'), name='api-admin-role'),
+
     # Drug category
     url(r'^api/admin/manage-drug-category/', include('drug_category.admin.urls'), name='api-admin-drug-category'),
+
     # Drug unit
     url(r'^api/admin/manage-drug-unit/', include('drug_unit.admin.urls'), name='api-admin-drug-unit'),
+
     # Drug
     url(r'^api/admin/manage-drug/', include('drug.admin.urls'), name='api-admin-drug'),
+
     # Drug instruction
     url(r'^api/admin/manage-drug-instruction/', include('drug_instruction.admin.urls'), name='api-admin-drug-instruction'),
+
     # Disease category
     url(r'^api/admin/manage-disease-category/', include('disease_category.admin.urls'), name='api-admin-disease-category'),
+
     # Disease
     url(r'^api/admin/manage-disease/', include('disease.admin.urls'), name='api-admin-disease'),
+
     # Service
     url(r'^api/admin/manage-service/', include('service.admin.urls'), name='api-admin-service'),
+
+    url(r'^api/admin/manage-working-hours/', include('working_hours.admin.urls'), name='api-admin-working'),
+
+    url(r'^api/admin/manage-setting/', include('setting.admin.urls'), name='api-admin-setting'),
+
+    url(r'^api/admin/manage-room/', include('room.admin.urls'), name='api-admin-room'),
+
     # Working hours
     url(r'^api/admin/manage-working-hours/', include('working_hours.admin.urls'), name='api-admin-service'),
+
     # Settings
     url(r'^api/admin/manage-setting/', include('setting.admin.urls'), name='api-admin-setting'),
+
     # Room
     url(r'^api/admin/manage-room/', include('room.admin.urls'), name='api-admin-room'),
+
     # Appointment
     url(r'^api/admin/manage-appointment/', include('appointment.admin.urls'), name='api-admin-appointment'),
 
     url(r'^api/admin/manage-visit/', include('visit.admin.urls'), name='api-admin-visit'),
 
     url(r'^api/admin/manage-emr/', include('emr.admin.urls'), name='api-admin-emr'),
+
+    url(r'^api/admin/manage-emr-drug/', include('emr_drug.admin.urls'), name='api-admin-emr-drug'),
 
     #------------------------------------------------------
     #                     User API
