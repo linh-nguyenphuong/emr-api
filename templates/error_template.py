@@ -4,7 +4,7 @@ class ErrorTemplate:
         )
 
         USER_REQUIRED = dict(
-            message='Yêu cầu đăng nhập.'
+            message='Yêu cầu đăng nhập bằng tài khoản người dùng.'
         )
 
         PHYSICIAN_REQUIRED = dict(
@@ -151,7 +151,7 @@ class ErrorTemplate:
             message='Mã bệnh nhân không đúng.'
         )
 
-        PHYSICIAN_REQUIRED = dict(
+        PHYSICIAN_NOT_EXIST = dict(
             message='Mã bác sĩ không đúng.'
         )
 
@@ -163,6 +163,14 @@ class ErrorTemplate:
             message='Cuộc hẹn đã được chấp nhận, không thể update.'
         )
 
+        DELETE_APPOINTMENT_NOT_ALLOW = dict(
+            message='Xóa cuộc hẹn chỉ được thực hiện bởi người khởi tạo nó.'
+        )
+
+        CANNOT_ACCEPT_OR_REJECT_APPOINTMENT = dict(
+            message='Tài khoản này không có quyền xét duyệt cuộc hẹn.'
+        )
+        
         VISIT_NOT_EXIST = dict(
             message='Mã đến khám không tồn tại.'
         )

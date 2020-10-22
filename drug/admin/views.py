@@ -59,7 +59,6 @@ class DrugView(generics.ListCreateAPIView):
     )
 
     def get_queryset(self):
-        print(Drug.objects.all().values())
         return self.model.objects.filter(is_deleted=False).order_by('name')
 
     def post(self, request, *args, **kwargs):

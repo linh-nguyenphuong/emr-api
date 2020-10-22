@@ -79,9 +79,9 @@ class EmrView(generics.ListCreateAPIView):
 
         patient = data['physician']
         if not patient or not patient.role.name == 'physician':
-            raise ValidationError(ErrorTemplate.PHYSICIAN_REQUIRED)
+            raise ValidationError(ErrorTemplate.PHYSICIAN_NOT_EXIST)
 
-        emr = serializer.save(created_by=self.request.user,
+        serializer.save(created_by=self.request.user,
                               total=total)
         return Response(serializer.data)
 
