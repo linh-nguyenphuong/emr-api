@@ -11,6 +11,10 @@ class ErrorTemplate:
             message='Yêu cầu đăng nhập bằng tài khoản bác sĩ.'
         )
 
+        PHYSICIAN_OR_RECEPTION_REQUIRED = dict(
+            message='Yêu cầu đăng nhập bằng tài khoản bác sĩ hoặc tiếp tân.'
+        )
+
         EMAIL_REQUIRED = dict(
             message='Vui lòng nhập địa chỉ email.'
         )
@@ -148,6 +152,10 @@ class ErrorTemplate:
         )
 
         PATIENT_REQUIRED = dict(
+            message='Yêu cầu nhập mã bệnh nhân.'
+        )
+
+        PATIENT_NOT_EXIST = dict(
             message='Mã bệnh nhân không đúng.'
         )
 

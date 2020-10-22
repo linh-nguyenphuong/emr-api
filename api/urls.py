@@ -90,4 +90,6 @@ urlpatterns = [
     url(r'^api/user/service/', include('service.user.urls'), name='api-user-service'),
     # Appointment
     url(r'^api/user/appointment/', include('appointment.user.urls'), name='api-user-appointment'),
+    # Appointment
+    url(r'^api/user/visit/', include('visit.user.urls'), name='api-user-visit'),
 ]

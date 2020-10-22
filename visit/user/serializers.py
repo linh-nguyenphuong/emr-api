@@ -7,32 +7,35 @@ from rest_framework import serializers
 from templates.error_template import ErrorTemplate
 
 # Model imports
-from appointment.models import Appointment
+from visit.models import Visit
 
 # Serialier imports
 from user.profile.serializers import (
     PublicProfileSerializer
 )
+from room.user.serializers import (
+    RoomSerializer
+)
 
-class AppointmentSerializer(serializers.ModelSerializer):
+class VisitSerializer(serializers.ModelSerializer):
     patient = PublicProfileSerializer(read_only=True)
-    physician = PublicProfileSerializer(read_only=True)
-
     patient_id = serializers.CharField(write_only=True)
-    physician_id = serializers.CharField(write_only=True)
+
+    room = RoomSerializer(read_only=True)
+    room_id = serializers.CharField(write_only=True)
 
     class Meta:
-        model = Appointment
+        model = Visit
         fields = (
             'id',
             'patient',
             'patient_id',
-            'physician',
-            'physician_id',
-            'appointment_at',
-            'status'
+            'room',
+            'room_id',
+            'created_at',
+            'visit_number'
         )
         extra_kwargs = {
             'id': {'read_only': True},
-            'status': {'read_only': True},
+            'visit_number': {'read_only': True},
         }
