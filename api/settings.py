@@ -25,7 +25,7 @@ SECRET_KEY = '6eoc94l@t*bi2w3vm(-d7#dqr($rkuzgg$f6#@1b)smkzg*j7i'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['emr-2020.wl.r.appspot.com', '127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
     'user',
     'role',
     'notification',
@@ -91,13 +92,19 @@ WSGI_APPLICATION = 'api.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
+import env
 
-DATABASES = {
+if hasattr(env, 'GOOGLE_CLOUD_SQL'):
+    DATABASES = {
+        'default': env.GOOGLE_CLOUD_SQL
+    }
+else:
+    DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'emr_db',
-        'USER': 'nhan',
-        'PASSWORD': '12345678',
+        'USER': 'root',
+        'PASSWORD': '12345679',
         'HOST': '127.0.0.1',
         'PORT': '3306',
         'OPTIONS': {
@@ -146,4 +153,41 @@ USE_TZ = False
 
 STATIC_URL = '/static/'
 
-FCM_SERVER_KEY = 'AAAAPkJcP0I:APA91bH7fWrrpG7RmIHoyZUwY6Gm75e1O5PfWD6oanBVbOSIa7WwIXUfPyBbCpA2Noet3mIT20UqTefsw_cYb5cQWEz5VnTrWbP0abyYylrfgW3GbNfZs1OfkO_mptgMha3LCFt2boUR'
+# Custom Auth
+AUTH_USER_MODEL = 'user.User'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'user.auth.backends.JWTAuthentication',
+    ],
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend',
+        'rest_framework.filters.SearchFilter',
+        'rest_framework.filters.OrderingFilter',
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 10
+}
+#-----------------------------------------------------------------------------------------
+
+# Sendgrid
+EMAIL_BACKEND = 'sendgrid_backend.SendgridBackend'
+SENDGRID_API_KEY = env.SENDGRID_API_KEY
+FROM_EMAIL='emr@example.com'
+# Toggle sandbox mode (when running in DEBUG mode)
+SENDGRID_SANDBOX_MODE_IN_DEBUG=False
+#-----------------------------------------------------------------------------------------
+
+# Cloudinary
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+import cloudinary
+cloudinary.config(
+    cloud_name=env.CLOUDINARY_STORAGE['CLOUD_NAME'],
+    api_key=env.CLOUDINARY_STORAGE['API_KEY'],
+    api_secret=env.CLOUDINARY_STORAGE['API_SECRET']
+)
+#---------------------------------------------------------------------------
+
+# FCM
+FCM_SERVER_KEY = env.FCM_SERVER_KEY

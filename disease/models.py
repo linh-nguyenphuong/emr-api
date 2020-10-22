@@ -12,6 +12,7 @@ class Disease(models.Model):
     name = models.CharField(max_length=191)
     code = models.CharField(max_length=191, unique=True)
     disease_category = models.ForeignKey(DiseaseCategory, related_name='disease_category', on_delete=models.Case)
+    is_deleted = models.BooleanField(default=False)
 
     class Meta:
         db_table = 'disease'

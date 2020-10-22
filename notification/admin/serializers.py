@@ -1,30 +1,30 @@
+# Django imports
+
 # Rest framework imports
 from rest_framework import serializers
 
+# Application imports
+from templates.error_template import ErrorTemplate
+
 # Model imports
-from user.models import User
 from notification.models import Notification
 
 
-class CreateNotificationSerializer(serializers.ModelSerializer):
-    title = serializers.CharField(max_length=191)
-    receives = serializers.ListField(
-        child=serializers.ChoiceField(choices=User.objects.filter(is_active=True).values_list('id', flat=True)),
-        allow_null=True,
-        allow_empty=True,
-    )
+class SendNotificationSerializer(serializers.ModelSerializer):
+    title = serializers.CharField()
+    receivers = serializers.ListField(allow_null=True)
 
     class Meta:
         model = Notification
         fields = (
             'title',
             'content',
-            'receives'
+            'receivers',
         )
 
 
-class ListOwnerNotificationSerializer(serializers.ModelSerializer):
-    receiver = serializers.SerializerMethodField()
+class NotificationSerializer(serializers.ModelSerializer):
+    title = serializers.CharField()
 
     class Meta:
         model = Notification
@@ -32,12 +32,15 @@ class ListOwnerNotificationSerializer(serializers.ModelSerializer):
             'id',
             'title',
             'content',
-            'created_at',
-            'receiver'
+            'is_read',
+            'sender',
+            'receiver',
         )
+        extra_kwargs = {
+            'id': {'read_only': True},
+            'is_read': {'read_only': True},
+            'sender': {'read_only': True},
+            'receiver': {'read_only': True},
 
-    @staticmethod
-    def get_receiver(instance):
-        if instance.receiver:
-            return instance.receiver.first_name + ' ' + instance.receiver.last_name
-        return None
+        }
+

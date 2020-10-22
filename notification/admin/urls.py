@@ -1,11 +1,12 @@
+# Django imports
 from django.conf.urls import url
 
-from .views import (
-    CreateNotificationView,
-    ListOwnerNotificationView,
+# Application imports
+from notification.admin.views import (
+    NotificationView,
+    # RoleDetailsView
 )
 
 urlpatterns = [
-    url(r'^$', CreateNotificationView.as_view(), name='broadcast-notification'),
-    url(r'^list/$', ListOwnerNotificationView.as_view(), name='list-notification'),
+    url(r'^$', NotificationView.as_view(), name='notification-view'),
 ]
