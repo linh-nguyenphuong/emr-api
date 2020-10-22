@@ -33,7 +33,7 @@ urlpatterns = [
     # Service
     url(r'^api/admin/manage-service/', include('service.admin.urls'), name='api-admin-service'),
 
-    url(r'^api/admin/manage-working-hours/', include('working_hours.admin.urls'), name='api-admin-service'),
+    url(r'^api/admin/manage-working-hours/', include('working_hours.admin.urls'), name='api-admin-working'),
 
     url(r'^api/admin/manage-setting/', include('setting.admin.urls'), name='api-admin-setting'),
 
@@ -44,6 +44,8 @@ urlpatterns = [
     url(r'^api/admin/manage-visit/', include('visit.admin.urls'), name='api-admin-visit'),
 
     url(r'^api/admin/manage-emr/', include('emr.admin.urls'), name='api-admin-emr'),
+
+    url(r'^api/admin/manage-emr-drug/', include('emr_drug.admin.urls'), name='api-admin-emr-drug'),
 
     #------------------------------------------------------
     #                     User API
