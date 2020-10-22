@@ -65,6 +65,10 @@ urlpatterns = [
 
     url(r'^api/admin/manage-emr-drug/', include('emr_drug.admin.urls'), name='api-admin-emr-drug'),
 
+    url(r'^api/admin/manage-emr-disease/', include('emr_disease.admin.urls'), name='api-admin-emr-disease'),
+
+    url(r'^api/admin/manage-emr-service/', include('patient_service.admin.urls'), name='api-admin-emr-service'),
+
     #------------------------------------------------------
     #                     User API
     #------------------------------------------------------

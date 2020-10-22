@@ -60,17 +60,31 @@ class EmrSerializer(serializers.ModelSerializer):
     def get_emr_disease(obj):
         emr_disease = EmrDisease.objects.filter(emr=obj,
                                                 is_deleted=False)
-        if emr_disease:
-            return emr_disease.values()
-        return None
+        list_disease = []
+        for data in emr_disease:
+            list_disease.append(
+                dict(
+                    id=data.id,
+                    disease=data.disease_id,
+                )
+            )
+        return list_disease
 
     @staticmethod
     def get_emr_service(obj):
         emr_service = PatientService.objects.filter(emr=obj,
                                                     is_deleted=False)
-        if emr_service:
-            return emr_service.values()
-        return None
+        list_service = []
+        for data in emr_service:
+            list_service.append(
+                dict(
+                    id=data.id,
+                    service=data.service.id,
+                    name=data.service.name,
+                    price=data.service.price
+                )
+            )
+        return list_service
 
     @staticmethod
     def get_image(obj):
