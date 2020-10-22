@@ -35,6 +35,9 @@ from templates.email_template import (
 # Model imports
 from user.models import User
 from role.models import Role
+from emr.models import Emr
+from patient_service.models import PatientService
+from emr_drug.models import EmrDrug
 
 # Serialier imports
 from user.admin.serializers import (
@@ -306,3 +309,30 @@ class UnblockUser(generics.RetrieveAPIView):
             raise ValidationError(ErrorTemplate.PROFILE_NOT_FOUND)
 
         return user
+
+
+class Dashboard(generics.RetrieveAPIView):
+    permission_classes = (IsAdmin,)
+
+    def get(self, request, *args, **kwargs):
+        patient = 0
+        revenue = 0
+        patient = User.objects.filter(is_deleted=False,
+                                      role__name='patient').count()
+        list_emr = Emr.objects.filter(is_paid=True,
+                                 is_deleted=False)
+        for emr in list_emr:
+            # service
+            list_service = PatientService.objects.filter(emr=emr,
+                                                         is_deleted=False)
+            for service in list_service:
+                revenue = revenue + service.service.price
+            # drug
+            list_drug = EmrDrug.objects.filter(emr=emr,
+                                               is_deleted=False)
+            for drug in list_drug:
+                revenue = revenue + (drug.quantity * drug.unit_price)
+        return Response(
+            dict(patient=patient,
+                 revenue=revenue)
+        )

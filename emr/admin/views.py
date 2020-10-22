@@ -47,6 +47,7 @@ from user.models import User
 # Serialier imports
 from emr.admin.serializers import (
     EmrSerializer,
+    EmrImageSerializer
 )
 
 
@@ -81,8 +82,9 @@ class EmrView(generics.ListCreateAPIView):
         if not patient or not patient.role.name == 'physician':
             raise ValidationError(ErrorTemplate.PHYSICIAN_NOT_EXIST)
 
+        data['status'] = 'pending'
         serializer.save(created_by=self.request.user,
-                              total=total)
+                        total=total)
         return Response(serializer.data)
 
 
@@ -106,6 +108,8 @@ class EmrDetailsView(generics.RetrieveUpdateDestroyAPIView):
         emr = self.get_object(emr_id)
 
         # Get serializer
+        if emr.status == 'complete':
+            raise ValidationError(ErrorTemplate.EMR_NOT_UPDATE)
         serializer = EmrSerializer(emr, data=request.data)
         serializer.is_valid(raise_exception=False)
         drug = serializer.save()
@@ -138,6 +142,78 @@ class EmrDetailsView(generics.RetrieveUpdateDestroyAPIView):
         ).first()
 
         if not obj:
-            raise ValidationError(ErrorTemplate.DRUG_NOT_EXIST)
+            raise ValidationError(ErrorTemplate.EMR_NOT_EXIST)
 
         return obj
+
+
+class EmrImageAddView(generics.CreateAPIView):
+    model = EmrImage
+    serializer_class = EmrImageSerializer
+    permission_classes = (IsAdmin,)
+    lookup_url_kwarg = 'emr_id'
+
+    def post(self, request, *args, **kwargs):
+        emr = Emr.objects.filter(id=self.kwargs.get(self.lookup_url_kwarg)).first()
+        if not emr:
+            raise ValidationError(ErrorTemplate.EMR_NOT_EXIST)
+
+        serializer = self.serializer_class(data=self.request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(emr=emr)
+
+        return Response(serializer.data)
+
+
+class EmrImageRemoveView(generics.DestroyAPIView):
+    model = EmrImage
+    permission_classes = (IsAdmin,)
+    pagination_class = None
+    lookup_url_kwarg = 'emr_image_id'
+
+    def delete(self, request, *args, **kwargs):
+
+        emr_image = self.model.objects.filter(id=self.kwargs.get(self.lookup_url_kwarg)).first()
+
+        emr_image.__dict__.update(
+            is_deleted=True,
+        )
+        emr_image.save()
+
+        return Response({
+            'message': 'Deleted successfully'
+        })
+
+
+class EmrCompleteView(generics.ListAPIView):
+    model = EmrImage
+    serializer_class = EmrSerializer
+    permission_classes = (IsAdmin,)
+    lookup_url_kwarg = 'emr_id'
+
+    def get(self, request, *args, **kwargs):
+        emr = Emr.objects.filter(id=self.kwargs.get(self.lookup_url_kwarg)).first()
+        if not emr:
+            raise ValidationError(ErrorTemplate.EMR_NOT_EXIST)
+
+        emr.status = 'complete'
+        emr.save()
+
+        return Response(self.serializer_class(emr).data)
+
+
+class EmrPaidView(generics.ListAPIView):
+    model = EmrImage
+    serializer_class = EmrSerializer
+    permission_classes = (IsAdmin,)
+    lookup_url_kwarg = 'emr_id'
+
+    def get(self, request, *args, **kwargs):
+        emr = Emr.objects.filter(id=self.kwargs.get(self.lookup_url_kwarg)).first()
+        if not emr:
+            raise ValidationError(ErrorTemplate.EMR_NOT_EXIST)
+
+        emr.is_paid = True
+        emr.save()
+
+        return Response(self.serializer_class(emr).data)

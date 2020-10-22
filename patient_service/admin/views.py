@@ -30,72 +30,59 @@ from api.permissions import (
 )
 
 # Model imports
-from emr_drug.models import (
-    EmrDrug
-)
+from patient_service.models import PatientService
+from service.models import Service
 from emr.models import Emr
-from drug_instruction.models import DrugInstruction
 
 # Serialier imports
-from emr_drug.admin.serializers import (
-    EmrDrugSerializer,
+from patient_service.admin.serializers import (
+    EmrServiceSerializer,
 )
+from service.admin.serializers import ServiceSerializer
 
 
 # List Role
-class EmrDrugAddView(generics.CreateAPIView):
-    model = EmrDrug
-    serializer_class = EmrDrugSerializer
+class EmrServiceView(generics.ListCreateAPIView):
+    model = PatientService
+    serializer_class = EmrServiceSerializer
     permission_classes = (IsAdmin,)
     pagination_class = None
     lookup_url_kwarg = 'emr_id'
+
+    def get_queryset(self):
+        self.serializer_class = ServiceSerializer
+        emr = Emr.objects.filter(id=self.kwargs.get(self.lookup_url_kwarg)).first()
+        if not emr:
+            raise ValidationError(ErrorTemplate.EMR_NOT_EXIST)
+        list_service = PatientService.objects.filter(emr=emr, is_deleted=False)
+        return Service.objects.filter(id__in=(list_service.values_list('service', flat=True)))
 
     def post(self, request, *args, **kwargs):
         emr = Emr.objects.filter(id=self.kwargs.get(self.lookup_url_kwarg)).first()
         if not emr:
             raise ValidationError(ErrorTemplate.EMR_NOT_EXIST)
-        total = 0
 
         serializer = self.serializer_class(data=self.request.data)
         serializer.is_valid(raise_exception=True)
-        data = serializer.validated_data
+        serializer.save(emr=emr)
 
-        if data['drug_instruction']:
-            serializer.save(emr=emr)
-
-            drug_emr = self.model.objects.filter(emr=emr, is_deleted=False)
-            for drug in drug_emr:
-                total = total + drug.quantity
-                emr.total = total
-                emr.save()
-
-            return Response(serializer.data)
-
-        raise ValidationError(ErrorTemplate.DRUG_INSTRUCTION_NOT_EXIST)
+        return Response(serializer.data)
 
 
-class EmrDrugRemoveView(generics.DestroyAPIView):
-    model = EmrDrug
+class EmrServiceRemoveView(generics.DestroyAPIView):
+    model = PatientService
     permission_classes = (IsAdmin,)
     pagination_class = None
-    lookup_url_kwarg = 'emr_drug_id'
+    lookup_url_kwarg = 'emr_service_id'
 
     def delete(self, request, *args, **kwargs):
 
-        emr_drug = self.model.objects.filter(id=self.kwargs.get(self.lookup_url_kwarg)).first()
+        emr_service = self.model.objects.filter(id=self.kwargs.get(self.lookup_url_kwarg)).first()
 
-        emr_drug.__dict__.update(
+        emr_service.__dict__.update(
             is_deleted=True,
         )
-        emr_drug.save()
-
-        total = 0
-        emr = Emr.objects.filter(id=self.kwargs.get('emr_id')).first()
-        drug_emr = self.model.objects.filter(emr=emr, is_deleted=False)
-        for drug in drug_emr:
-            total = total + drug.quantity
-            emr.total = total
-            emr.save()
+        emr_service.save()
 
         return Response({
             'message': 'Deleted successfully'

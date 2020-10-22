@@ -30,22 +30,19 @@ from api.permissions import (
 )
 
 # Model imports
-from emr_drug.models import (
-    EmrDrug
-)
 from emr.models import Emr
-from drug_instruction.models import DrugInstruction
+from emr_disease.models import EmrDisease
 
 # Serialier imports
-from emr_drug.admin.serializers import (
-    EmrDrugSerializer,
+from emr_disease.admin.serializers import (
+    EmrDiseaseSerializer,
 )
 
 
 # List Role
-class EmrDrugAddView(generics.CreateAPIView):
-    model = EmrDrug
-    serializer_class = EmrDrugSerializer
+class EmrDiseaseAddView(generics.CreateAPIView):
+    model = EmrDisease
+    serializer_class = EmrDiseaseSerializer
     permission_classes = (IsAdmin,)
     pagination_class = None
     lookup_url_kwarg = 'emr_id'
@@ -54,48 +51,30 @@ class EmrDrugAddView(generics.CreateAPIView):
         emr = Emr.objects.filter(id=self.kwargs.get(self.lookup_url_kwarg)).first()
         if not emr:
             raise ValidationError(ErrorTemplate.EMR_NOT_EXIST)
-        total = 0
 
         serializer = self.serializer_class(data=self.request.data)
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
 
-        if data['drug_instruction']:
-            serializer.save(emr=emr)
-
-            drug_emr = self.model.objects.filter(emr=emr, is_deleted=False)
-            for drug in drug_emr:
-                total = total + drug.quantity
-                emr.total = total
-                emr.save()
-
-            return Response(serializer.data)
-
-        raise ValidationError(ErrorTemplate.DRUG_INSTRUCTION_NOT_EXIST)
+        EmrDisease.objects.create(emr=emr,
+                                  disease=data['disease'])
+        return Response(serializer.data)
 
 
-class EmrDrugRemoveView(generics.DestroyAPIView):
-    model = EmrDrug
+class EmrDiseaseRemoveView(generics.DestroyAPIView):
+    model = EmrDisease
     permission_classes = (IsAdmin,)
     pagination_class = None
-    lookup_url_kwarg = 'emr_drug_id'
+    lookup_url_kwarg = 'emr_disease_id'
 
     def delete(self, request, *args, **kwargs):
 
-        emr_drug = self.model.objects.filter(id=self.kwargs.get(self.lookup_url_kwarg)).first()
+        emr_disease = self.model.objects.filter(id=self.kwargs.get(self.lookup_url_kwarg)).first()
 
-        emr_drug.__dict__.update(
+        emr_disease.__dict__.update(
             is_deleted=True,
         )
-        emr_drug.save()
-
-        total = 0
-        emr = Emr.objects.filter(id=self.kwargs.get('emr_id')).first()
-        drug_emr = self.model.objects.filter(emr=emr, is_deleted=False)
-        for drug in drug_emr:
-            total = total + drug.quantity
-            emr.total = total
-            emr.save()
+        emr_disease.save()
 
         return Response({
             'message': 'Deleted successfully'
