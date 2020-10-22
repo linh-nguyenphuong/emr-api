@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'emr_disease',
     'working_hours',
     'setting',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -67,6 +68,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'api.urls'
@@ -191,3 +193,13 @@ cloudinary.config(
 
 # FCM
 FCM_SERVER_KEY = env.FCM_SERVER_KEY
+
+# CORS
+CORS_ORIGIN_WHITELIST = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "https://localhost:3000",
+    "https://127.0.0.1:3000",
+    "https://emr-client.tech"
+]
+#-------------------------------------------------------------------------------------------
