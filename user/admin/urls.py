@@ -8,7 +8,8 @@ from user.admin.views import (
     BlockUser,
     UnblockUser,
 
-    Dashboard
+    Dashboard,
+    Report
 )
 
 urlpatterns = [
@@ -17,5 +18,6 @@ urlpatterns = [
     url(r'^(?P<user_id>[0-9A-Fa-f-]+)/block/$', BlockUser.as_view(), name='block-user'),
     url(r'^(?P<user_id>[0-9A-Fa-f-]+)/unblock/$', UnblockUser.as_view(), name='unblock-user'),
 
-    url(r'^dashboard/$', Dashboard.as_view(), name='unblock-user'),
+    url(r'^dashboard/$', Dashboard.as_view(), name='dashboard'),
+    url(r'^report/$', Report.as_view(), name='dashboard'),
 ]

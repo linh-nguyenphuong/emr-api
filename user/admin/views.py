@@ -6,6 +6,9 @@ import jwt
 from django.core.mail import send_mail
 from django.conf import settings
 from django.utils import dateparse
+from django.db.models import Q, Sum, Count
+from django.utils import timezone
+
 
 # Django REST framework imports
 from rest_framework import generics
@@ -42,7 +45,11 @@ from emr_drug.models import EmrDrug
 # Serialier imports
 from user.admin.serializers import (
     UserSerializer,
+
+    FilterDateRangeFormatSerializer,
+    ReportPatientSerializer
 )
+from emr.admin.serializers import EmrSerializer
 
 class UserView(generics.ListCreateAPIView):
     model = User
@@ -315,7 +322,6 @@ class Dashboard(generics.RetrieveAPIView):
     permission_classes = (IsAdmin,)
 
     def get(self, request, *args, **kwargs):
-        patient = 0
         revenue = 0
         patient = User.objects.filter(is_deleted=False,
                                       role__name='patient').count()
@@ -336,3 +342,125 @@ class Dashboard(generics.RetrieveAPIView):
             dict(patient=patient,
                  revenue=revenue)
         )
+
+
+class Report(generics.RetrieveAPIView):
+    permission_classes = (IsAdmin,)
+
+    def get(self, request, *args, **kwargs):
+        from_date = self.request.query_params.get('from_date', timezone.now().min)
+        to_date = self.request.query_params.get('to_date', timezone.now())
+        from_date, to_date = self.validate_range_dates(from_date, to_date)
+
+        patient_month = self.patient_monthly(from_date, to_date)
+
+        revenue = self.revenue_monthly(from_date, to_date)
+
+        list_emr = Emr.objects.filter(is_paid=True,
+                                      is_deleted=False).order_by('-created_at')[:10]
+        report_emr = []
+        report_emr.append(ReportPatientSerializer(list_emr, many=True).data)
+        return Response(
+            dict(patient=patient_month,
+                 list_emr=report_emr,
+                 revenue=revenue)
+        )
+
+    def revenue_monthly(self, from_date, to_date):
+        queryset = []
+        for year_month in self.find_months(from_date, to_date):
+
+            list_emr = Emr.objects.filter(is_paid=True,
+                                          is_deleted=False,
+                                          created_at__year=year_month[0],
+                                          created_at__month=year_month[1],
+                                          )
+            revenue = 0
+            for emr in list_emr:
+                # service
+                list_service = PatientService.objects.filter(emr=emr,
+                                                             is_deleted=False)
+                for service in list_service:
+                    revenue = revenue + service.service.price
+                # drug
+                list_drug = EmrDrug.objects.filter(emr=emr,
+                                                   is_deleted=False)
+                for drug in list_drug:
+                    revenue = revenue + (drug.quantity * drug.unit_price)
+            queryset.append(
+                {
+                    "month": year_month[1],
+                    "year": year_month[0],
+                    "total_revenue": revenue
+                }
+            )
+        return queryset
+
+    def patient_monthly(self, from_date, to_date):
+        queryset = []
+        for year_month in self.find_months(from_date, to_date):
+            queryset.append(
+                {
+                    "month": year_month[1],
+                    "year": year_month[0],
+                    "total_user": User.objects.filter(
+                        is_deleted=False,
+                        role__name='patient',
+                        created_at__year=year_month[0],
+                        created_at__month=year_month[1],
+                    ).count(),
+                }
+            )
+        return queryset
+
+    @staticmethod
+    def find_months(from_date, to_date):
+        # Convert str to date
+        if type(from_date) == str:
+            from_date = datetime.strptime(from_date, '%Y-%m-%d').date()
+        if type(to_date) == str:
+            to_date = datetime.strptime(to_date, '%Y-%m-%d').date()
+        print((to_date + timedelta(days=1) - from_date).days)
+
+        total_months = lambda dt: dt.month + 12 * dt.year
+        list_months = []
+        for tot_m in range(total_months(from_date) - 1, total_months(to_date)):
+            y, m = divmod(tot_m, 12)
+            year_month = datetime(y, m + 1, 1).strftime("%Y-%m").split('-')
+            year_month = list(map(int, year_month))
+            list_months.append(year_month)
+
+        return list_months
+
+    @staticmethod
+    def validate_range_dates(from_date, to_date, filter_type='report'):
+        if not from_date or not to_date:
+            raise ValidationError(dict(message='from_date and to_date is required'
+            ))
+        from_date, to_date = FilterRangeDate.validate_filter_range_date(from_date, to_date, filter_type)
+        return from_date, to_date
+
+
+class FilterRangeDate:
+
+    @staticmethod
+    def validate_filter_range_date(from_date, to_date, lang='en'):
+        range_date_data = dict()
+        if type(from_date) == str:
+            range_date_data['from_date'] = from_date
+        if type(to_date) == str:
+            range_date_data['to_date'] = to_date
+        date_serializer = FilterDateRangeFormatSerializer(data=range_date_data)
+        date_serializer.is_valid(raise_exception=True)
+
+        if type(from_date) == str and type(to_date) == str and from_date > to_date:
+            raise ValidationError(dict(message='rom_date cannot be later than to_date'))
+
+        if type(from_date) == str:
+            from_date = datetime.strptime(from_date, '%Y-%m-%d').date().strftime('%Y-%m-%d')
+
+        if type(to_date) == str:
+            to_date = datetime.strptime(to_date, '%Y-%m-%d').date()
+            to_date = (to_date + timedelta(days=1)).strftime('%Y-%m-%d')
+
+        return from_date, to_date

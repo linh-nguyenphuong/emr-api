@@ -182,3 +182,7 @@ class ErrorTemplate:
         EMR_NOT_UPDATE = dict(
             message='Bệnh án đã hoàn thành, không thể update.'
         )
+
+        REPORT = dict(
+
+        )
