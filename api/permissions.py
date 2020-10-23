@@ -23,7 +23,7 @@ class IsPhysician(BasePermission):
         return request.user.role.name == 'physician' and request.user.is_active
 
 class IsPhysicianOrReceptionist(BasePermission):
-    message = ErrorTemplate.PHYSICIAN_REQUIRED
+    message = ErrorTemplate.PHYSICIAN_OR_RECEPTION_REQUIRED
 
     def has_permission(self, request, view):
         user_role = ('receptionist', 'physician')

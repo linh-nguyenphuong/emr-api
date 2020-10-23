@@ -61,13 +61,23 @@ class AppointmentView(generics.ListCreateAPIView):
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
 
-        patient = data['patient']
-        if not patient or not patient.role.name == 'patient':
-            raise ValidationError(ErrorTemplate.PATIENT_REQUIRED)
-
-        physician = data['physician']
-        if not physician or not physician.role.name == 'physician':
-            raise ValidationError(ErrorTemplate.PHYSICIAN_REQUIRED)
+        # Check patient exist
+        patient = User.objects.filter(
+            id=data.get('patient_id'),
+            is_deleted=False,
+            role__name='patient'
+        ).first()
+        if not patient:
+            raise ValidationError(ErrorTemplate.PATIENT_NOT_EXIST)
+        
+        # Check physician exist
+        physician = User.objects.filter(
+            id=data.get('physician_id'),
+            is_deleted=False,
+            role__name='physician'
+        ).first()
+        if not physician:
+            raise ValidationError(ErrorTemplate.PHYSICIAN_NOT_EXIST)
 
         # Check user role
         if request.user.role.name == 'patient':
@@ -99,24 +109,33 @@ class AppointmentDetailsView(generics.RetrieveUpdateDestroyAPIView):
         appointment_id = self.kwargs.get(self.lookup_url_kwarg)
         appointment = self.get_object(appointment_id)
         if not appointment.status == 'accept':
-        # Get serializer
+            # Get serializer
             serializer = AppointmentSerializer(appointment, data=request.data)
             serializer.is_valid(raise_exception=False)
             data = serializer.validated_data
 
-            patient = data['patient']
-            if not patient or not patient.role.name == 'patient':
-                raise ValidationError(ErrorTemplate.PATIENT_REQUIRED)
-
-            physician = data['physician']
-            if not physician or not physician.role.name == 'physician':
-                raise ValidationError(ErrorTemplate.PHYSICIAN_REQUIRED)
+            # Check patient exist
+            patient = User.objects.filter(
+                id=data.get('patient_id'),
+                is_deleted=False,
+                role__name='patient'
+            ).first()
+            if not patient:
+                raise ValidationError(ErrorTemplate.PATIENT_NOT_EXIST)
+            
+            # Check physician exist
+            physician = User.objects.filter(
+                id=data.get('physician_id'),
+                is_deleted=False,
+                role__name='physician'
+            ).first()
+            if not physician:
+                raise ValidationError(ErrorTemplate.PHYSICIAN_NOT_EXIST)
 
             appointment = serializer.save()
 
             return Response(self.serializer_class(appointment).data)
         raise ValidationError(ErrorTemplate.APPOINTMENT_NOT_UPDATE)
-
 
     def delete(self, request, *args, **kwargs):
         appointment_id = self.kwargs.get(self.lookup_url_kwarg)
@@ -167,7 +186,6 @@ class AppointmentAcceptView(generics.UpdateAPIView):
 
         return Response(self.serializer_class(appointment).data)
 
-
     def get_object(self, object_id):
         obj = self.model.objects.filter(
             id=object_id,
@@ -178,7 +196,6 @@ class AppointmentAcceptView(generics.UpdateAPIView):
             raise ValidationError(ErrorTemplate.APPOINTMENT_NOT_EXIST)
 
         return obj
-
 
 class AppointmentRejectView(generics.UpdateAPIView):
     model = Appointment
@@ -199,7 +216,6 @@ class AppointmentRejectView(generics.UpdateAPIView):
         appointment.save()
 
         return Response(self.serializer_class(appointment).data)
-
 
     def get_object(self, object_id):
         obj = self.model.objects.filter(
