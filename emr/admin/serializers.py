@@ -13,7 +13,7 @@ from emr.models import (
 )
 from emr_drug.models import EmrDrug
 from emr_disease.models import EmrDisease
-from patient_service.models import PatientService
+from emr_service.models import EmrService
 
 from drug.admin.serializers import DrugSerializer
 
@@ -75,7 +75,7 @@ class EmrSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def get_emr_service(obj):
-        emr_service = PatientService.objects.filter(emr=obj,
+        emr_service = EmrService.objects.filter(emr=obj,
                                                     is_deleted=False)
         list_service = []
         for data in emr_service:

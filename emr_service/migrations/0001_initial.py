@@ -16,15 +16,15 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='PatientService',
+            name='EmrService',
             fields=[
                 ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('emr', models.ForeignKey(on_delete=django.db.models.expressions.Case, related_name='patient_service_emr', to='emr.Emr')),
-                ('service', models.ForeignKey(on_delete=django.db.models.expressions.Case, related_name='patient_service_service', to='service.Service')),
+                ('emr', models.ForeignKey(on_delete=django.db.models.expressions.Case, related_name='emr_service_emr', to='emr.Emr')),
+                ('service', models.ForeignKey(on_delete=django.db.models.expressions.Case, related_name='emr_service_service', to='service.Service')),
             ],
             options={
-                'db_table': 'patient_service',
+                'db_table': 'emr_service',
             },
         ),
     ]

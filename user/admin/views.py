@@ -39,7 +39,7 @@ from templates.email_template import (
 from user.models import User
 from role.models import Role
 from emr.models import Emr
-from patient_service.models import PatientService
+from emr_service.models import EmrService
 from emr_drug.models import EmrDrug
 
 # Serialier imports
@@ -329,7 +329,7 @@ class Dashboard(generics.RetrieveAPIView):
                                  is_deleted=False)
         for emr in list_emr:
             # service
-            list_service = PatientService.objects.filter(emr=emr,
+            list_service = EmrService.objects.filter(emr=emr,
                                                          is_deleted=False)
             for service in list_service:
                 revenue = revenue + service.service.price
@@ -378,7 +378,7 @@ class Report(generics.RetrieveAPIView):
             revenue = 0
             for emr in list_emr:
                 # service
-                list_service = PatientService.objects.filter(emr=emr,
+                list_service = EmrService.objects.filter(emr=emr,
                                                              is_deleted=False)
                 for service in list_service:
                     revenue = revenue + service.service.price

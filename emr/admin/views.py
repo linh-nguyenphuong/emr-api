@@ -36,7 +36,7 @@ from emr.models import (
 )
 from emr_drug.models import EmrDrug
 from emr_disease.models import EmrDisease
-from patient_service.models import PatientService
+from emr_service.models import EmrService
 from drug.models import Drug
 from drug_instruction.models import DrugInstruction
 from disease.models import Disease
@@ -127,7 +127,7 @@ class EmrDetailsView(generics.RetrieveUpdateDestroyAPIView):
         EmrImage.objects.filter(emr=emr).update(is_deleted=True)
         EmrDrug.objects.filter(emr=emr).update(is_deleted=True)
         EmrDisease.objects.filter(emr=emr).update(is_deleted=True)
-        PatientService.objects.filter(emr=emr).update(is_deleted=True)
+        EmrService.objects.filter(emr=emr).update(is_deleted=True)
         # Save to database
         emr.save()
 

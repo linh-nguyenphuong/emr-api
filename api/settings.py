@@ -48,7 +48,7 @@ INSTALLED_APPS = [
     'disease',
     'emr',
     'service',
-    'patient_service',
+    'emr_service',
     'drug_instruction',
     'drug_category',
     'drug_unit',

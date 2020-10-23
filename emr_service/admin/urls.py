@@ -2,7 +2,7 @@
 from django.conf.urls import url, include
 
 # Application imports
-from patient_service.admin.views import (
+from emr_service.admin.views import (
     EmrServiceView,
     EmrServiceRemoveView,
 )

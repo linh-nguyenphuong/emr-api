@@ -67,7 +67,7 @@ urlpatterns = [
 
     url(r'^api/admin/manage-emr-disease/', include('emr_disease.admin.urls'), name='api-admin-emr-disease'),
 
-    url(r'^api/admin/manage-emr-service/', include('patient_service.admin.urls'), name='api-admin-emr-service'),
+    url(r'^api/admin/manage-emr-service/', include('emr_service.admin.urls'), name='api-admin-emr-service'),
 
     #------------------------------------------------------
     #                     User API

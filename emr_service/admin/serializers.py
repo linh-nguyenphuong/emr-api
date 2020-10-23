@@ -7,12 +7,12 @@ from rest_framework import serializers
 from templates.error_template import ErrorTemplate
 
 # Model imports
-from patient_service.models import PatientService
+from emr_service.models import EmrService
 
 class EmrServiceSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = PatientService
+        model = EmrService
         fields = (
             'id',
             'service',
