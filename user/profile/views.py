@@ -20,6 +20,7 @@ from rest_framework.exceptions import (
     AuthenticationFailed
 )
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.permissions import IsAuthenticated
 
 # Application imports
 from templates.error_template import (
@@ -46,7 +47,7 @@ from user.profile.serializers import (
 class ProfileDetailsView(generics.RetrieveUpdateAPIView):
     model = User
     serializer_class = PrivateProfileSerializer
-    permission_classes = (IsUser,)
+    permission_classes = (IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
         user = self.get_object(request.user.id)
