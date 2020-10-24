@@ -135,7 +135,6 @@ class LoginView(APIView):
         return Response({
             'access_token': user.access_token,
             'refresh_token': user.refresh_token,
-            'user_role': user.role.name
         })
     
 
@@ -171,7 +170,6 @@ class RefreshTokenView(APIView):
 
         return Response({
             'access_token': user.access_token,
-            'user_role': user.role.name
         })
 
 class ChangePasswordView(generics.UpdateAPIView):
