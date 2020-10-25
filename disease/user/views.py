@@ -44,7 +44,7 @@ from disease.user.serializers import (
 class DiseaseView(generics.ListAPIView):
     model = Disease
     serializer_class = DiseaseSerializer
-    permission_classes = (IsAdmin,)
+    permission_classes = (IsPhysician,)
     filter_backends = (DjangoFilterBackend, OrderingFilter, SearchFilter,)
     search_fields = (
         'name',
@@ -63,7 +63,7 @@ class DiseaseView(generics.ListAPIView):
 class DiseaseDetailsView(generics.RetrieveAPIView):
     model = Disease
     serializer_class = DiseaseDetailsSerializer
-    permission_classes = (IsAdmin,)
+    permission_classes = (IsPhysician,)
     lookup_url_kwarg = 'disease_id'
 
     def get(self, request, *args, **kwargs):

@@ -11,6 +11,10 @@ class ErrorTemplate:
             message='Yêu cầu đăng nhập bằng tài khoản bác sĩ.'
         )
 
+        ADMIN_OR_PHYSICIAN_REQUIRED = dict(
+            message='Yêu cầu đăng nhập bằng tài khoản quản trị hoặc bác sĩ.'
+        )
+
         PHYSICIAN_OR_RECEPTION_REQUIRED = dict(
             message='Yêu cầu đăng nhập bằng tài khoản bác sĩ hoặc tiếp tân.'
         )
@@ -188,7 +192,35 @@ class ErrorTemplate:
         )
 
         EMR_NOT_UPDATE = dict(
-            message='Bệnh án đã hoàn thành, không thể update.'
+            message='Bệnh án đã được đóng, không thể cập nhật hay xóa.'
+        )
+
+        DISEASE_EXISTED_IN_EMR = dict(
+            message='Bệnh này đã được thêm vào bệnh án.'
+        )
+
+        DISEASE_NOT_EXIST_IN_EMR = dict(
+            message='Bệnh này chưa được thêm vào bệnh án.'
+        )
+
+        DRUG_EXISTED_IN_EMR = dict(
+            message='Thuốc này đã được thêm vào bệnh án.'
+        )
+
+        DRUG_NOT_EXIST_IN_EMR = dict(
+            message='Thuốc này chưa được thêm vào bệnh án.'
+        )
+
+        SERVICE_EXISTED_IN_EMR = dict(
+            message='Dịch vụ này đã được thêm vào bệnh án.'
+        )
+
+        SERVICE_NOT_EXIST_IN_EMR = dict(
+            message='Dịch vụ này chưa được thêm vào bệnh án.'
+        )
+
+        CANNOT_ACCESS_EMR = dict(
+            message='Không thể xem bệnh án này'
         )
 
         REPORT = dict(

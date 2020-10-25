@@ -15,7 +15,6 @@ class EmrDrug(models.Model):
     drug_instruction = models.ForeignKey(DrugInstruction, related_name='emr_drug_drug_instruction', on_delete=models.Case)
     drug = models.ForeignKey(Drug, related_name='emr_drug_drug', on_delete=models.Case)
     quantity = models.IntegerField()
-    unit_price = models.DecimalField(max_digits=20, decimal_places=0)
     is_deleted = models.BooleanField(default=False)
 
     class Meta:
