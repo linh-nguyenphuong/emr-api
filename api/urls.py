@@ -128,5 +128,6 @@ urlpatterns = [
     # Emr drug
     url(r'^api/user/emr-drug/', include('emr_drug.user.urls'), name='api-user-emr-drug'),
 
-    
+    # Patient
+    url(r'^api/user/patient/', include('user.patient.urls'), name='api-user-patient'),
 ]

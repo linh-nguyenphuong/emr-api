@@ -26,6 +26,7 @@ class UserSerializer(serializers.ModelSerializer):
             'first_name', 
             'last_name', 
             'DOB',
+            'gender',
             'role',
             'role_id',
             'is_active',
