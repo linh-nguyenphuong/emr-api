@@ -325,16 +325,7 @@ class Dashboard(generics.RetrieveAPIView):
         list_emr = Emr.objects.filter(is_paid=True,
                                  is_deleted=False)
         for emr in list_emr:
-            # service
-            list_service = EmrService.objects.filter(emr=emr,
-                                                         is_deleted=False)
-            for service in list_service:
-                revenue = revenue + service.service.price
-            # drug
-            list_drug = EmrDrug.objects.filter(emr=emr,
-                                               is_deleted=False)
-            for drug in list_drug:
-                revenue = revenue + (drug.quantity * drug.unit_price)
+            revenue = revenue + emr.total
         return Response(
             dict(patient=patient,
                  revenue=revenue)
