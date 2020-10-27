@@ -100,7 +100,7 @@ class ErrorTemplate:
         )
 
         IMAGE_NOT_EXIST = dict(
-            message='Mã hình ảnh không tồn tại.'
+            message='Hình ảnh không tồn tại.'
         )
 
         PROFILE_NOT_FOUND = dict(
@@ -112,47 +112,47 @@ class ErrorTemplate:
         )
 
         ROLE_NOT_EXIST = dict(
-            message='Mã chức danh không tồn tại.'
+            message='Chức danh không tồn tại.'
         )
 
         DRUG_CATEGORY_NOT_EXIST = dict(
-            message='Mã loại thuốc không tồn tại.'
+            message='Loại thuốc không tồn tại.'
         )
 
         DRUG_UNIT_NOT_EXIST = dict(
-            message='Mã đơn vị thuốc không tồn tại.'
+            message='Đơn vị thuốc không tồn tại.'
         )
 
         DRUG_NOT_EXIST = dict(
-            message='Mã thuốc không tồn tại.'
+            message='Thuốc không tồn tại.'
         )
 
         DRUG_INSTRUCTION_NOT_EXIST = dict(
-            message='Mã hướng dẫn không tồn tại.'
+            message='Hướng dẫn không tồn tại.'
         )
 
         DISEASE_CATEGORY_NOT_EXIST = dict(
-            message='Mã loại bệnh không tồn tại.'
+            message='Loại bệnh không tồn tại.'
         )
 
         DISEASE_NOT_EXIST = dict(
-            message='Mã bệnh không tồn tại.'
+            message='Bệnh không tồn tại.'
         )
 
         SERVICE_NOT_EXIST = dict(
-            message='Mã dịch vụ không tồn tại.'
+            message='Dịch vụ không tồn tại.'
         )
 
         WORKING_NOT_EXIST = dict(
-            message='Mã làm việc không tồn tại.'
+            message='Giờ làm việc không tồn tại.'
         )
 
         SETTING_NOT_EXIST = dict(
-            message='Mã cấu hình không tồn tại.'
+            message='Tùy chỉnh cài đặt không tồn tại.'
         )
 
         ROOM_NOT_EXIST = dict(
-            message='Mã phòng không tồn tại.'
+            message='Phòng không tồn tại.'
         )
 
         PATIENT_REQUIRED = dict(
@@ -160,15 +160,15 @@ class ErrorTemplate:
         )
 
         PATIENT_NOT_EXIST = dict(
-            message='Mã bệnh nhân không đúng.'
+            message='Bệnh nhân không đúng.'
         )
 
         PHYSICIAN_NOT_EXIST = dict(
-            message='Mã bác sĩ không đúng.'
+            message='Bác sĩ không đúng.'
         )
 
         APPOINTMENT_NOT_EXIST = dict(
-            message='Mã cuộc hẹn không tồn tại.'
+            message='Cuộc hẹn không tồn tại.'
         )
 
         APPOINTMENT_NOT_UPDATE = dict(
@@ -184,11 +184,11 @@ class ErrorTemplate:
         )
         
         VISIT_NOT_EXIST = dict(
-            message='Mã đến khám không tồn tại.'
+            message='Lần đến khám không tồn tại.'
         )
 
         EMR_NOT_EXIST = dict(
-            message='Mã bệnh án không tồn tại.'
+            message='Bệnh án không tồn tại.'
         )
 
         EMR_NOT_UPDATE = dict(
@@ -223,6 +223,14 @@ class ErrorTemplate:
             message='Không thể xem bệnh án này'
         )
 
-        REPORT = dict(
+        SERVICE_ALREADY_EXISTED = dict(
+            message='Tên dịch vụ đã tồn tại.'
+        )
 
+        DISEASE_CODE_ALREADY_EXISTED = dict(
+            message='Mã bệnh đã tồn tại.'
+        )
+
+        DRUG_CODE_ALREADY_EXISTED = dict(
+            message='Mã thuốc đã tồn tại.'
         )

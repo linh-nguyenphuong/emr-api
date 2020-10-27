@@ -40,8 +40,6 @@ from drug.admin.serializers import (
     DrugDetailsSerializer
 )
 
-
-# List Role
 class DrugView(generics.ListCreateAPIView):
     model = Drug
     serializer_class = DrugSerializer
@@ -64,6 +62,15 @@ class DrugView(generics.ListCreateAPIView):
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=self.request.data)
         serializer.is_valid(raise_exception=True)
+        data = serializer.validated_data
+
+        # Check code is existed
+        drug = Drug.objects.filter(
+            code=data.get('code')
+        ).first()
+        if drug:
+            raise ValidationError(ErrorTemplate.DRUG_CODE_ALREADY_EXISTED)
+
         serializer.save()
 
         return Response(serializer.data)
@@ -90,7 +97,18 @@ class DrugDetailsView(generics.RetrieveUpdateDestroyAPIView):
 
         # Get serializer
         serializer = DrugSerializer(drug, data=request.data)
-        serializer.is_valid(raise_exception=False)
+        serializer.is_valid(raise_exception=True)
+        data = serializer.validated_data
+
+        # Check code is existed
+        drug_code_existed = Drug.objects.filter(
+            code=data.get('code')
+        ).exclude(
+            id=drug.id
+        ).first()
+        if drug_code_existed:
+            raise ValidationError(ErrorTemplate.DRUG_CODE_ALREADY_EXISTED)
+
         drug = serializer.save()
 
         return Response(self.serializer_class(drug).data)

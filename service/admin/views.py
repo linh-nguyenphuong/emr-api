@@ -51,6 +51,16 @@ class ServiceView(generics.ListCreateAPIView):
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=self.request.data)
         serializer.is_valid(raise_exception=True)
+        data = serializer.validated_data
+
+        # Check service is existed
+        service = Service.objects.filter(
+            id=data.get('name'),
+            is_deleted=False
+        ).first()
+        if service:
+            raise ValidationError(ErrorTemplate.SERVICE_ALREADY_EXISTED)
+
         serializer.save()
 
         return Response(serializer.data)
@@ -80,8 +90,19 @@ class ServiceDetailsView(generics.RetrieveUpdateDestroyAPIView):
         serializer.is_valid(raise_exception=False)
         data = request.data
 
+        # Check service is existed
+        service_name_existed = Service.objects.filter(
+            name=data.get('name'),
+            is_deleted=False
+        ).exclude(
+            id=service.id
+        ).first()
+        if service_name_existed:
+            raise ValidationError(ErrorTemplate.SERVICE_ALREADY_EXISTED)
+
         service.__dict__.update(
             name=data.get('name'),
+            price=data.get('price')
         )
 
         # Save to database

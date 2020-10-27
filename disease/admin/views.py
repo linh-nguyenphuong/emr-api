@@ -64,6 +64,15 @@ class DiseaseView(generics.ListCreateAPIView):
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=self.request.data)
         serializer.is_valid(raise_exception=True)
+        data = serializer.validated_data
+
+        # Check code is existed
+        disease = Disease.objects.filter(
+            code=data.get('code')
+        ).first()
+        if disease:
+            raise ValidationError(ErrorTemplate.DISEASE_CODE_ALREADY_EXISTED)
+
         serializer.save()
 
         return Response(serializer.data)
@@ -90,7 +99,18 @@ class DiseaseDetailsView(generics.RetrieveUpdateDestroyAPIView):
 
         # Get serializer
         serializer = DiseaseSerializer(disease, data=request.data)
-        serializer.is_valid(raise_exception=False)
+        serializer.is_valid(raise_exception=True)
+        data = serializer.validated_data
+
+        # Check code is existed
+        disease_code_existed = Disease.objects.filter(
+            code=data.get('code')
+        ).exclude(
+            id=disease.id
+        ).first()
+        if disease_code_existed:
+            raise ValidationError(ErrorTemplate.DISEASE_CODE_ALREADY_EXISTED)
+
         disease = serializer.save()
 
         return Response(self.serializer_class(disease).data)

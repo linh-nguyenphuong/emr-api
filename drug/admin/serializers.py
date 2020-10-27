@@ -2,6 +2,7 @@
 
 # Rest framework imports
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 
 # Application imports
 from templates.error_template import ErrorTemplate
@@ -12,8 +13,6 @@ from drug_category.admin.serializers import DrugCategorySerializer
 from drug_unit.admin.serializers import DrugUnitSerializer
 
 class DrugSerializer(serializers.ModelSerializer):
-    name = serializers.CharField()
-
     class Meta:
         model = Drug
         fields = (
