@@ -190,7 +190,7 @@ class UserDetailsView(generics.RetrieveUpdateDestroyAPIView):
             role_id=role.id
         )
 
-        # Complete update account for User
+        # Complete update email for User
         if data.get('email') and not data.get('email') == '':
             # Check email existed
             email = self.model.objects.filter(
@@ -202,8 +202,8 @@ class UserDetailsView(generics.RetrieveUpdateDestroyAPIView):
             if email:
                 return Response(ErrorTemplate.EMAIL_ALREADY_EXISTED, status=status.HTTP_400_BAD_REQUEST)
             else:
-                user.email = email
-                user.is_active = False
+                user.email = data.get('email')
+                user.is_verified_email = False
 
                 # Send activation link to user's email address
                 url = 'http://127.0.0.1:8000/api/auth/verify-email'
