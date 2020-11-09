@@ -105,17 +105,17 @@ class UserView(generics.ListCreateAPIView):
         user.set_password(data.get('password'))
 
         # Complete create account for Admin, Physcian, Receptionist
-        if role.name in ('admin', 'receptionist', 'physician'):
-            if not data.get('email') or data.get('email') == '':
+        if not data.get('email') or data.get('email') == '':
+            if role.name in ('admin', 'receptionist', 'physician'):
                 return Response(ErrorTemplate.EMAIL_REQUIRED, status=status.HTTP_400_BAD_REQUEST)
-            else:
-                # Check email existed
-                email = self.model.objects.filter(
-                    email=data.get('email'),
-                ).first()
-                if email:
-                    return Response(ErrorTemplate.EMAIL_ALREADY_EXISTED, status=status.HTTP_400_BAD_REQUEST)
-                user.email = data.get('email')
+        else:
+            # Check email existed
+            email = self.model.objects.filter(
+                email=data.get('email'),
+            ).first()
+            if email:
+                return Response(ErrorTemplate.EMAIL_ALREADY_EXISTED, status=status.HTTP_400_BAD_REQUEST)
+            user.email = data.get('email')
 
         # Save to database
         user.save()
