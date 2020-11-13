@@ -20,6 +20,7 @@ class PublicProfileSerializer(serializers.ModelSerializer):
             'first_name',
             'last_name',
             'gender', 
+            'DOB',
             'role',
             'avatar'
         )
