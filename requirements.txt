@@ -17,4 +17,5 @@ requests==2.24.0
 sendgrid==6.4.7
 six==1.15.0
 starkbank-ecdsa==1.1.0
+twilio==6.48.0
 urllib3==1.25.10

@@ -197,6 +197,10 @@ cloudinary.config(
 # FCM
 FCM_SERVER_KEY = env.FCM_SERVER_KEY
 
+# TWILIO
+TWILIO_ACCOUNT_SID = env.TWILIO['ACCOUNT']
+TWILIO_AUTH_TOKEN = env.TWILIO['TOKEN']
+
 # CORS
 CORS_ORIGIN_WHITELIST = [
     "http://localhost:3000",

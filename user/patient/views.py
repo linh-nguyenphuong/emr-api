@@ -1,6 +1,9 @@
 # Python imports
 from datetime import datetime, timedelta
 import jwt
+import secrets
+import string
+from twilio.rest import Client
 
 # Django imports
 from django.core.mail import send_mail
@@ -92,7 +95,16 @@ class PatientView(generics.ListCreateAPIView):
             gender=data.get('gender'),
             role_id=4
         )
-        user.set_password(data.get('password'))
+        alphabet = string.ascii_letters + string.digits
+        password = ''.join(secrets.choice(alphabet) for i in range(10)) 
+        user.set_password(password)
+        user.is_verified_phone = True
+
+        # Send password to patient's phone 
+        client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
+
+        message = client.messages.create(to=user.phone, from_="+15107563745",
+                                 body="Hello there!, this is your EMR password: {0}".format(password))
 
         # Save to database
         user.save()

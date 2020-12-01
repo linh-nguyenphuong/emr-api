@@ -19,7 +19,6 @@ class PatientSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'phone',
-            'password',
             'address',
             'first_name', 
             'last_name', 
@@ -30,7 +29,6 @@ class PatientSerializer(serializers.ModelSerializer):
             'is_verified_phone',
         )
         extra_kwargs = {
-            'password': {'write_only': True},
             'is_active': {'read_only': True},
             'is_verified_phone': {'read_only': True},
         }
