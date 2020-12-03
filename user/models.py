@@ -88,6 +88,7 @@ class User(AbstractUser):
         token = jwt.encode({
             'token_type': 'access',
             'user_id': str(self.id),
+            'role': self.role.name,
             'expired_at': dt.strftime('%c')
         }, settings.SECRET_KEY, algorithm='HS256')
 
@@ -99,6 +100,7 @@ class User(AbstractUser):
         token = jwt.encode({
             'token_type': 'refresh',
             'user_id': str(self.id),
+            'role': self.role.name,
             'expired_at': dt.strftime('%c'),
         }, settings.SECRET_KEY, algorithm='HS256')
 
