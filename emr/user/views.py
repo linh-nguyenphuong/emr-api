@@ -296,3 +296,21 @@ class EmrPatientDetailsView(generics.RetrieveUpdateDestroyAPIView):
             raise ValidationError(ErrorTemplate.EMR_NOT_EXIST)
 
         return obj
+
+class EmrImageAddViewFabric(generics.CreateAPIView):
+    permission_classes = (IsAdminOrPhysician,)
+
+    def post(self, request, *args, **kwargs):
+        # try:
+        file = request.FILES.get('image')
+        if not file:
+            return Response(ErrorTemplate.IMAGE_REQUIRED, status.HTTP_400_BAD_REQUEST)
+
+        uploaded_file = cloudinary.uploader.upload(
+            file,
+            folder='emr/emr_image/', 
+        )
+
+        return Response({
+            'url': uploaded_file.get('secure_url'),
+        })

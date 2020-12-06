@@ -13,7 +13,9 @@ from emr.user.views import (
     EmrPaidView,
 
     EmrPatientView,
-    EmrPatientDetailsView
+    EmrPatientDetailsView,
+
+    EmrImageAddViewFabric
 )
 
 urlpatterns = [
@@ -28,4 +30,7 @@ urlpatterns = [
 
     url(r'^myemr/$', EmrPatientView.as_view(), name='patient-list-emr'),
     url(r'^myemr/(?P<emr_id>[0-9A-Fa-f-]+)/$', EmrPatientDetailsView.as_view(), name='patient-details-emr'),
+
+    # Add emr image for blockchain
+    url(r'^image/$', EmrImageAddViewFabric.as_view(), name='user-add-emr-image-fabric'),
 ]
