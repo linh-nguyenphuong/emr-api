@@ -191,13 +191,11 @@ class UserDetailsView(generics.RetrieveUpdateDestroyAPIView):
         )
 
         # Complete update email for User
-        if data.get('email') and not data.get('email') == '':
+        if not data.get('email') == user.email:
             # Check email existed
             email = self.model.objects.filter(
                 email=data.get('email'),
                 is_deleted=False
-            ).exclude(
-                id=user.id
             ).first()
             if email:
                 return Response(ErrorTemplate.EMAIL_ALREADY_EXISTED, status=status.HTTP_400_BAD_REQUEST)
