@@ -46,7 +46,7 @@ class IsPhysicianOrReceptionist(BasePermission):
 
     def has_permission(self, request, view):
         try:
-            user_role = ('receptionist', 'physician')
+            user_role = ('admin', 'receptionist', 'physician')
             return request.user.role.name in user_role and request.user.is_active
         except:
             return False
