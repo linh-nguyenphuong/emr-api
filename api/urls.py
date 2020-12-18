@@ -32,6 +32,12 @@ urlpatterns = [
     # Drug instruction
     url(r'^api/admin/manage-drug-instruction/', include('drug_instruction.admin.urls'), name='api-admin-drug-instruction'),
 
+    # Drug dosage form
+    url(r'^api/admin/manage-drug-dosage-form/', include('drug_dosage_form.admin.urls'), name='api-admin-drug-dosage-form'),
+
+    # Drug route
+    url(r'^api/admin/manage-drug-route/', include('drug_route.admin.urls'), name='api-admin-drug-route'),
+
     # Disease category
     url(r'^api/admin/manage-disease-category/', include('disease_category.admin.urls'), name='api-admin-disease-category'),
 
@@ -103,6 +109,12 @@ urlpatterns = [
 
     # Drug unit
     url(r'^api/user/drug-unit/', include('drug_unit.user.urls'), name='api-user-drug-unit'),
+
+    # Drug dosage form
+    url(r'^api/user/drug-dosage-form/', include('drug_dosage_form.user.urls'), name='api-user-drug-dosage-form'),
+
+    # Drug route
+    url(r'^api/user/drug-route/', include('drug_route.user.urls'), name='api-user-drug-route'),
 
     # Room
     url(r'^api/user/room/', include('room.user.urls'), name='api-user-room'),

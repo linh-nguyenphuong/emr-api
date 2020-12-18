@@ -131,6 +131,14 @@ class ErrorTemplate:
             message='Hướng dẫn không tồn tại.'
         )
 
+        DRUG_DOSAGE_FORM_NOT_EXIST = dict(
+            message='Dạng bào chế không tồn tại.'
+        )
+
+        DRUG_ROUTE_NOT_EXIST = dict(
+            message='Đường dùng không tồn tại.'
+        )
+
         DISEASE_CATEGORY_NOT_EXIST = dict(
             message='Loại bệnh không tồn tại.'
         )

@@ -52,6 +52,8 @@ INSTALLED_APPS = [
     'drug_instruction',
     'drug_category',
     'drug_unit',
+    'drug_dosage_form',
+    'drug_route',
     'drug',
     'emr_drug',
     'emr_disease',
