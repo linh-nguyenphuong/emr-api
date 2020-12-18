@@ -56,6 +56,13 @@ class User(AbstractUser):
     fcm_registration = models.CharField(max_length=191, null=True, blank=True)
     role = models.ForeignKey(Role, related_name='user_role', on_delete=models.Case)
     is_deleted = models.BooleanField(default=False)
+    job = models.CharField(max_length=191, null=True, blank=True)
+    ethnicity = models.CharField(max_length=191, null=True, blank=True)
+    expatriate = models.CharField(max_length=191, null=True, blank=True)
+    workplace = models.CharField(max_length=191, null=True, blank=True)
+    family_member_name = models.CharField(max_length=191, null=True, blank=True)
+    family_member_address = models.CharField(max_length=191, null=True, blank=True)
+    
     GENDER_CHOICES = (
         ('Nam', 'Nam'),
         ('Nữ', 'Nữ'),

@@ -104,7 +104,12 @@ class ProfileDetailsView(generics.RetrieveUpdateAPIView):
             last_name=data.get('last_name'),
             address=data.get('address'),
             DOB=data.get('DOB'),
-            gender=data.get('gender')
+            gender=data.get('gender'),
+            job=data.get('job'),
+            expatriate=data.get('expatriate'),
+            workplace=data.get('workplace'),
+            family_member_name=data.get('family_member_name'),
+            family_member_address=data.get('family_member_address'),
         )
             
         # Save to database

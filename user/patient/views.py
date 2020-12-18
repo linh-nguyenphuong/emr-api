@@ -93,7 +93,13 @@ class PatientView(generics.ListCreateAPIView):
             phone= data.get('phone'),
             DOB=data.get('DOB'),
             gender=data.get('gender'),
-            role_id=4
+            role_id=4,
+            job=data.get('job'),
+            ethnicity=data.get('ethnicity'),
+            expatriate=data.get('expatriate'),
+            workplace=data.get('workplace'),
+            family_member_name=data.get('family_member_name'),
+            family_member_address=data.get('family_member_address'),
         )
         alphabet = string.ascii_letters + string.digits
         password = ''.join(secrets.choice(alphabet) for i in range(10)) 
@@ -103,8 +109,13 @@ class PatientView(generics.ListCreateAPIView):
         # Send password to patient's phone 
         client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
 
-        message = client.messages.create(to=user.phone, from_="+15107563745",
+        try:
+            message = client.messages.create(to=user.phone, from_="+15107563745",
                                  body="Hello there!, this is your EMR password: {0}".format(password))
+        except Exception as e:
+            return Response(dict(
+                                message=str(e)
+                            ), status=status.HTTP_400_BAD_REQUEST)
 
         # Save to database
         user.save()

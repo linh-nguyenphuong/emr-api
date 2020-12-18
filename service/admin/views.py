@@ -55,7 +55,7 @@ class ServiceView(generics.ListCreateAPIView):
 
         # Check service is existed
         service = Service.objects.filter(
-            id=data.get('name'),
+            name=data.get('name'),
             is_deleted=False
         ).first()
         if service:

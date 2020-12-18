@@ -46,6 +46,7 @@ class DrugView(generics.ListAPIView):
     serializer_class = DrugSerializer
     permission_classes = (IsPhysician,)
     filter_backends = (DjangoFilterBackend, OrderingFilter, SearchFilter,)
+    pagination_class = None
     search_fields = (
         'name',
         'code'

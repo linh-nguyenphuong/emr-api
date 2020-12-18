@@ -44,6 +44,12 @@ class PrivateProfileSerializer(serializers.ModelSerializer):
             'is_active',
             'is_verified_email',
             'is_verified_phone',
+             'job',
+            'ethnicity',
+            'expatriate',
+            'workplace',
+            'family_member_name',
+            'family_member_address'
         )
         extra_kwargs = {
             'email': {'read_only': True},

@@ -27,6 +27,12 @@ class PatientSerializer(serializers.ModelSerializer):
             'role',
             'is_active',
             'is_verified_phone',
+            'job',
+            'ethnicity',
+            'expatriate',
+            'workplace',
+            'family_member_name',
+            'family_member_address'
         )
         extra_kwargs = {
             'is_active': {'read_only': True},
