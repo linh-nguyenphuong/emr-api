@@ -17,12 +17,20 @@ class PublicProfileSerializer(serializers.ModelSerializer):
         model = User
         fields = (
             'id',
-            'first_name',
+            'phone',
+            'address',
+            'first_name', 
             'last_name',
             'gender', 
             'DOB',
+            'avatar',
             'role',
-            'avatar'
+            'job',
+            'ethnicity',
+            'expatriate',
+            'workplace',
+            'family_member_name',
+            'family_member_address'
         )
 
 class PrivateProfileSerializer(serializers.ModelSerializer):
