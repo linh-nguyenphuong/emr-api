@@ -44,7 +44,7 @@ class PrivateProfileSerializer(serializers.ModelSerializer):
             'is_active',
             'is_verified_email',
             'is_verified_phone',
-             'job',
+            'job',
             'ethnicity',
             'expatriate',
             'workplace',
