@@ -14,7 +14,15 @@ from drug_dosage_form.admin.serializers import DrugDosageFormSerializer
 from drug_route.admin.serializers import DrugRouteSerializer
 
 class DrugSerializer(serializers.ModelSerializer):
-    name = serializers.CharField()
+    drug_category = DrugCategorySerializer(read_only=True)
+    drug_unit = DrugUnitSerializer(read_only=True)
+    drug_dosage_form = DrugDosageFormSerializer(read_only=True)
+    drug_route = DrugRouteSerializer(read_only=True)
+
+    drug_category_id = serializers.CharField(write_only=True)
+    drug_unit_id = serializers.CharField(write_only=True)
+    drug_dosage_form_id = serializers.CharField(write_only=True)
+    drug_route_id = serializers.CharField(write_only=True)
 
     class Meta:
         model = Drug
@@ -23,15 +31,20 @@ class DrugSerializer(serializers.ModelSerializer):
             'name',
             'code',
             'price',
+            'strength',
             'drug_category',
             'drug_unit',
             'drug_dosage_form',
             'drug_route',
-            'strength'
+            'drug_category_id',
+            'drug_unit_id',
+            'drug_dosage_form_id',
+            'drug_route_id',
         )
         extra_kwargs = {
             'id': {'read_only': True},
         }
+
 
 
 class DrugDetailsSerializer(serializers.ModelSerializer):

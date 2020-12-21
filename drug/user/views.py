@@ -61,14 +61,6 @@ class DrugView(generics.ListAPIView):
     def get_queryset(self):
         return self.model.objects.filter(is_deleted=False).order_by('name')
 
-    def post(self, request, *args, **kwargs):
-        serializer = self.serializer_class(data=self.request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-
-        return Response(serializer.data)
-
-
 class DrugDetailsView(generics.RetrieveAPIView):
     model = Drug
     serializer_class = DrugDetailsSerializer
