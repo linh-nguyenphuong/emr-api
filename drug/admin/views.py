@@ -146,7 +146,40 @@ class DrugDetailsView(generics.RetrieveUpdateDestroyAPIView):
         if drug_code_existed:
             raise ValidationError(ErrorTemplate.DRUG_CODE_ALREADY_EXISTED)
 
-        drug = serializer.save()
+        # Check drug_category_id existed
+        drug_category = DrugCategory.objects.filter(
+            id=data.get('drug_category_id')
+        ).first()
+        if not drug_category:
+            raise ValidationError(ErrorTemplate.DRUG_CATEGORY_NOT_EXIST)
+
+        # Check drug_unit_id existed
+        drug_unit = DrugUnit.objects.filter(
+            id=data.get('drug_unit_id')
+        ).first()
+        if not drug_unit:
+            raise ValidationError(ErrorTemplate.DRUG_UNIT_NOT_EXIST)
+
+        # Check drug_dosage_form_id existed
+        drug_dosage_form = DrugDosageForm.objects.filter(
+            id=data.get('drug_dosage_form_id')
+        ).first()
+        if not drug_dosage_form:
+            raise ValidationError(ErrorTemplate.DRUG_DOSAGE_FORM_NOT_EXIST)
+
+        # Check drug_route_id existed
+        drug_route = DrugRoute.objects.filter(
+            id=data.get('drug_route_id')
+        ).first()
+        if not drug_route:
+            raise ValidationError(ErrorTemplate.DRUG_ROUTE_NOT_EXIST)
+
+        drug = serializer.save(
+            drug_category=drug_category,
+            drug_unit=drug_unit,
+            drug_dosage_form=drug_dosage_form,
+            drug_route=drug_route
+        )
 
         return Response(self.serializer_class(drug).data)
 
