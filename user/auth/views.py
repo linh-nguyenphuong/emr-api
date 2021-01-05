@@ -111,7 +111,8 @@ class LoginView(APIView):
 
         # Fetch the user by searching the email or phone
         user = User.objects.filter(
-            Q(email=email) | Q(phone=phone)
+            Q(email=email) | Q(phone=phone),
+            is_deleted=False
         ).first()
         if not user:
             # Run the default password hasher once to reduce the timing
